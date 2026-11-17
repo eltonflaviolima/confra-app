@@ -1,0 +1,27 @@
+services:
+  confra-app:
+    image: ghcr.io/eltonflaviolima/confra-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: confra-app
+    restart: always
+    volumes:
+      - ./confra_state.json:/app/confra_state.json
+    environment:
+      - PORT=3000
+      - STATE_FILE=/app/confra_state.json
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.http.routers.confra-app.rule=Host(`gincana.eltonlima.tech`)"
+      - "traefik.http.routers.confra-app.entrypoints=websecure"
+      - "traefik.http.routers.confra-app.tls=true"
+      - "traefik.http.routers.confra-app.tls.certresolver=letsencrypt"
+      - "traefik.http.services.confra-app.loadbalancer.server.port=3000"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

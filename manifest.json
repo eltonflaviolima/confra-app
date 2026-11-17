@@ -1,0 +1,23 @@
+{
+  "name": "Confra JBSN — Gincana",
+  "short_name": "Confra JBSN",
+  "description": "App Oficial da Gincana da Juventude da Igreja Batista Sol Nascente",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#FFF9EE",
+  "theme_color": "#3A001D",
+  "icons": [
+    {
+      "src": "references/elements_01.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "references/design_reference.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

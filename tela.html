@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confra JBSN — Modo Telão / Transmissão TV</title>
+  
+  <meta name="theme-color" content="#3A001D">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,800&family=Noto+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-bg: #FFF9EE;
+      --color-ink: #3A001D;
+      --color-yellow: #FECB66;
+      --color-coral: #FF6F89;
+      --color-mint: #79D3A8;
+      --color-card-bg: #FFFFFF;
+      --border-thick: 4px solid var(--color-ink);
+      --border-super: 6px solid var(--color-ink);
+      --shadow-big: 0 14px 0 0 var(--color-ink);
+      --shadow-sm: 0 4px 0 0 var(--color-ink);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-ink);
+      font-family: 'Noto Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      padding: 24px 36px 20px 36px;
+    }
+
+    .tabular {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+
+    .font-display {
+      font-family: 'Fraunces', Georgia, serif;
+    }
+
+    /* HEADER DO TELÃO */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: var(--border-thick);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-seed {
+      width: 44px;
+      height: 44px;
+      background-color: var(--color-ink);
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display: inline-block;
+      box-shadow: 0 4px 0 0 rgba(58, 0, 29, 0.25);
+      position: relative;
+    }
+
+    .brand-seed::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--color-yellow);
+    }
+
+    .brand-text h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text span {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(58, 0, 29, 0.7);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-telao {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 800;
+      border: 3px solid var(--color-ink);
+      border-radius: 9999px;
+      background: var(--color-card-bg);
+      color: var(--color-ink);
+      box-shadow: 0 4px 0 0 var(--color-ink);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.1s ease;
+    }
+
+    .btn-telao:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 0 var(--color-ink);
+    }
+
+    .btn-telao.primary {
+      background: var(--color-yellow);
+    }
+
+    .btn-telao.coral {
+      background: var(--color-coral);
+      color: #FFFFFF;
+    }
+
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #E8F5E9;
+      border: 2px solid #2E7D32;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-weight: 800;
+      font-size: 13px;
+      color: #2E7D32;
+      text-transform: uppercase;
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      background: #2E7D32;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+
+    /* GRID PRINCIPAL DO PLACAR */
+    .arena-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      margin-bottom: 24px;
+      position: relative;
+      transition: gap 0.8s ease-in-out;
+    }
+
+    .arena-container.dance-active {
+      gap: 20px;
+    }
+
+    .team-panel {
+      flex: 1;
+      max-width: 540px;
+      background: #FFFFFF;
+      border: var(--border-super);
+      border-radius: 36px;
+      box-shadow: var(--shadow-big);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      position: relative;
+      text-align: center;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  max-width 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  padding 0.8s ease-in-out;
+      will-change: transform, max-width;
+    }
+
+    /* Translação lateral ease-in-out ao ativar o Dance:
+       Time Sol vai para a esquerda, Time Nascente vai para a direita */
+    .arena-container.dance-active #panel-team-a {
+      transform: translateX(-24px) scale(0.92);
+      max-width: 360px;
+      padding: 28px 16px;
+    }
+
+    .arena-container.dance-active #panel-team-b {
+      transform: translateX(24px) scale(0.92);
+      max-width: 360px;
+      padding: 28px 16px;
+    }
+
+    .arena-container.dance-active .team-score-giant {
+      font-size: 110px;
+    }
+
+    .team-panel.team-a {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 100%);
+    }
+
+    .team-panel.team-b {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFF8FA 100%);
+    }
+
+    .team-panel.leading {
+      transform: scale(1.02);
+      border-color: #3A001D;
+    }
+
+    .leader-badge {
+      position: absolute;
+      top: -18px;
+      background: var(--color-mint);
+      border: 3px solid var(--color-ink);
+      border-radius: 9999px;
+      padding: 6px 18px;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-sm);
+      display: none;
+    }
+
+    .team-panel.leading .leader-badge {
+      display: block;
+    }
+
+    .team-crest-large {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: var(--border-thick);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      box-shadow: 0 6px 0 0 var(--color-ink);
+      margin-bottom: 14px;
+    }
+
+    .team-name-large {
+      font-family: 'Fraunces', serif;
+      font-size: 44px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+
+    .team-score-giant {
+      font-family: 'Fraunces', serif;
+      font-size: 150px;
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      color: var(--color-ink);
+      transition: font-size 0.8s ease-in-out, transform 0.2s ease;
+    }
+
+    .team-score-giant.score-bump {
+      animation: bump 0.4s ease-out;
+    }
+
+    @keyframes bump {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2) translateY(-10px); color: #E5A823; }
+      100% { transform: scale(1); }
+    }
+
+    .team-sublabel {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(58, 0, 29, 0.65);
+      margin-top: 10px;
+    }
+
+    /* VS BADGE CENTRAL */
+    .vs-center-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-shrink: 0;
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, width 0.5s ease-in-out;
+    }
+
+    .arena-container.dance-active .vs-center-col {
+      opacity: 0;
+      transform: scale(0.4);
+      width: 0;
+      margin: 0;
+      pointer-events: none;
+      position: absolute;
+    }
+
+    .vs-emblem {
+      width: 100px;
+      height: 100px;
+      background: var(--color-yellow);
+      border: var(--border-thick);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-size: 42px;
+      font-weight: 900;
+      box-shadow: 0 8px 0 0 var(--color-ink);
+    }
+
+    .diff-badge {
+      background: #FFFFFF;
+      border: 3px solid var(--color-ink);
+      border-radius: 9999px;
+      padding: 6px 14px;
+      font-weight: 800;
+      font-size: 14px;
+      box-shadow: var(--shadow-sm);
+      white-space: nowrap;
+    }
+
+    /* PALCO CENTRAL DE VÍDEO (DANCE STAGE ENTRE OS PLACARES) */
+    .dance-stage-wrapper {
+      width: 0;
+      max-width: 0;
+      height: 480px;
+      opacity: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-radius: 36px;
+      border: 0 solid var(--color-ink);
+      box-shadow: none;
+      background: #000000;
+      pointer-events: none;
+      transform: scale(0.85);
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  max-width 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  opacity 0.75s ease-in-out, 
+                  transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.8s ease-in-out, 
+                  border-width 0.2s;
+    }
+
+    .arena-container.dance-active .dance-stage-wrapper {
+      width: 100%;
+      max-width: 520px;
+      opacity: 1;
+      pointer-events: auto;
+      border: var(--border-super);
+      box-shadow: var(--shadow-big);
+      transform: scale(1);
+    }
+
+    .dance-stage-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.75s ease-in-out;
+    }
+
+    .dance-stage-video.fade-in {
+      opacity: 1;
+    }
+
+    .dance-stage-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2.5px solid var(--color-ink);
+      color: var(--color-ink);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-weight: 900;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 0 3px 0 0 var(--color-ink);
+      z-index: 10;
+      transition: all 0.15s ease;
+    }
+
+    .dance-stage-close:hover {
+      background: #FFFFFF;
+      transform: scale(1.05);
+    }
+
+    .dance-stage-close:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 0 var(--color-ink);
+    }
+
+    /* TRANSIÇÃO SUAVE DE ESMAECIMENTO DO PLACAR PARA APRESENTAÇÃO */
+    .arena-container {
+      transition: opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1), transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    .arena-container.presentation-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.96);
+    }
+    .clash-section {
+      transition: opacity 0.5s ease;
+    }
+    .clash-section.presentation-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* PALCO CINEMATOGRÁFICO DE APRESENTAÇÃO DE PROVA NO TELÃO */
+    .telao-prova-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+      min-height: 520px;
+      margin-bottom: 24px;
+      z-index: 100;
+      transition: opacity 0.5s ease;
+    }
+
+    .prova-stage-container {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Wrap do Título: começa no centro da tela ocupando 80% */
+    .prova-stage-title-wrap {
+      width: 80%;
+      max-width: 80%;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #FFFFFF;
+      border: 4px solid var(--color-ink);
+      border-radius: 36px;
+      box-shadow: 0 16px 0 0 var(--color-ink), 0 20px 30px rgba(58, 0, 29, 0.15);
+      padding: 36px 28px;
+      transform: scale(0.6) translateY(20px);
+      opacity: 0;
+      transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    /* Quando surge com destaque no meio */
+    .prova-stage-title-wrap.enter-center {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    /* Quando diminui para tamanho médio e sobe para o topo */
+    .prova-stage-title-wrap.docked-top {
+      opacity: 1;
+      width: 90%;
+      max-width: 90%;
+      padding: 14px 28px;
+      border-radius: 24px;
+      border-width: 3.5px;
+      box-shadow: 0 8px 0 0 var(--color-ink);
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .prova-stage-icon {
+      font-size: 72px;
+      line-height: 1;
+      margin-bottom: 12px;
+      transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    .prova-stage-title-wrap.docked-top .prova-stage-icon {
+      font-size: 40px;
+      margin-bottom: 0;
+    }
+
+    .prova-stage-title {
+      font-family: 'Fraunces', serif;
+      font-size: 64px;
+      font-weight: 900;
+      color: var(--color-ink);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+      transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    .prova-stage-title-wrap.docked-top .prova-stage-title {
+      font-size: 34px;
+      margin-bottom: 0;
+      text-align: left;
+      flex: 1;
+    }
+
+    .prova-stage-category {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #FFF;
+      background: var(--color-ink);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    .prova-stage-title-wrap.docked-top .prova-stage-category {
+      font-size: 13px;
+      padding: 4px 14px;
+    }
+
+    /* Card de Regras & Como Funciona */
+    .prova-stage-rules-card {
+      width: 90%;
+      max-width: 90%;
+      background: #FFFFFF;
+      border: 3.5px solid var(--color-ink);
+      border-radius: 32px;
+      box-shadow: 0 12px 0 0 var(--color-ink);
+      padding: 24px 28px;
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .prova-stage-rules-card.enter-rules {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .prova-stage-rules-card.exit-rules {
+      opacity: 0;
+      transform: translateY(80px);
+      transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .rules-header-pill {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--color-yellow);
+      border: 2px solid var(--color-ink);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      color: var(--color-ink);
+      margin-bottom: 14px;
+    }
+
+    .rules-body-text {
+      font-size: 20px;
+      line-height: 1.55;
+      font-weight: 600;
+      color: var(--color-ink);
+      background: var(--color-bg);
+      border: 2px solid var(--color-ink);
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin-bottom: 18px;
+    }
+
+    .rules-footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .rule-box {
+      background: #FFF9EE;
+      border: 2px solid var(--color-ink);
+      border-radius: 16px;
+      padding: 12px 16px;
+    }
+
+    .rule-box-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(58, 0, 29, 0.7);
+      margin-bottom: 6px;
+    }
+
+    .rule-box-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--color-ink);
+    }
+
+    .rule-box-tips {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 14px;
+      color: var(--color-ink);
+      line-height: 1.4;
+    }
+
+    .rules-timer-bar-wrap {
+      border-top: 2px dashed rgba(58, 0, 29, 0.25);
+      padding-top: 14px;
+    }
+
+    .rules-timer-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--color-ink);
+      margin-bottom: 6px;
+    }
+
+    .rules-timer-track {
+      width: 100%;
+      height: 12px;
+      background: var(--color-bg);
+      border: 2px solid var(--color-ink);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .rules-timer-fill {
+      height: 100%;
+      background: var(--color-coral);
+      width: 100%;
+      border-radius: 9999px;
+      transition: width 1s linear;
+    }
+
+    /* CRONÔMETRO GIGANTE DO TELÃO (SUBSTITUI O PLACAR) */
+    .telao-timer-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .telao-timer-card {
+      width: 100%;
+      max-width: 860px;
+      background: #FFFFFF;
+      border: var(--border-super);
+      border-radius: 44px;
+      box-shadow: var(--shadow-big);
+      padding: 32px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .telao-timer-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3.5px solid var(--color-ink);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+
+    .telao-timer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .telao-timer-ring {
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: var(--color-bg);
+      border: 8px solid var(--color-ink);
+      box-shadow: 0 12px 0 0 var(--color-ink), inset 0 8px 16px rgba(58, 0, 29, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .telao-timer-digits {
+      font-family: 'Fraunces', serif;
+      font-size: 130px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--color-ink);
+    }
+
+    .telao-timer-status {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(58, 0, 29, 0.65);
+      margin-top: 10px;
+    }
+
+    /* BARRA DE DISPUTA / GAUGE EM GRANDE ESCALA */
+    .clash-section {
+      background: #FFFFFF;
+      border: var(--border-thick);
+      border-radius: 28px;
+      padding: 18px 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+
+    .clash-info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .clash-bar-track {
+      height: 28px;
+      background: #F3EBDB;
+      border: var(--border-thick);
+      border-radius: 9999px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .clash-bar-fill-a {
+      height: 100%;
+      background: var(--color-yellow);
+      border-right: 3px solid var(--color-ink);
+      transition: width 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .clash-bar-fill-b {
+      height: 100%;
+      background: var(--color-coral);
+      transition: width 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    /* TICKER DE ÚLTIMOS EVENTOS */
+    .feed-ticker {
+      display: flex;
+      align-items: center;
+      background: #FFF5E4;
+      border: 3px solid var(--color-ink);
+      border-radius: 20px;
+      padding: 10px 18px;
+      gap: 14px;
+    }
+
+    .feed-badge {
+      background: var(--color-ink);
+      color: #FFF;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      letter-spacing: 0.05em;
+    }
+
+    .feed-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Banner de Celebração de Ponto */
+    #celebration-banner {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-150%);
+      background: var(--color-yellow);
+      border: var(--border-thick);
+      border-radius: 9999px;
+      padding: 16px 36px;
+      box-shadow: 0 12px 0 0 var(--color-ink);
+      font-family: 'Fraunces', serif;
+      font-size: 28px;
+      font-weight: 900;
+      z-index: 1000;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    #celebration-banner.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 850px) {
+      .arena-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .team-score-giant {
+        font-size: 90px;
+      }
+      .team-crest-large {
+        width: 70px;
+        height: 70px;
+        font-size: 36px;
+      }
+      .team-name-large {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BANNER FLUTUANTE DE CELEBRAÇÃO -->
+  <div id="celebration-banner">⚡ PONTO MARCADO!</div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand-group">
+      <span class="brand-seed"></span>
+      <div class="brand-text">
+        <h1>Confra JBSN 2026</h1>
+        <span>Transmissão Oficial da Gincana da Juventude</span>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span>Ao Vivo</span>
+      </div>
+
+      <button class="btn-telao" onclick="toggleFullscreen()">
+        ⛶ Tela Cheia
+      </button>
+
+      <!-- Botão Celebrar (Toca o som celebration.mp3) -->
+      <button class="btn-telao primary" onclick="playCelebration()">
+        🎉 Celebrar
+      </button>
+
+      <!-- Botão Dance (Abre o palco de vídeo no meio dos placares com translação lateral) -->
+      <button class="btn-telao coral" onclick="startDanceVideo()">
+        🕺 Dance
+      </button>
+    </div>
+  </header>
+
+  <!-- Banner de Ativação do Áudio/Vídeo caso o navegador bloqueie Autoplay -->
+  <div id="audio-unlock-banner" onclick="unlockTelaoAudio()" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 99999; background: #FECB66; color: #3A001D; border: 3px solid #3A001D; border-radius: 9999px; padding: 12px 28px; font-weight: 900; font-size: 15px; box-shadow: 0 6px 0 0 #3A001D; cursor: pointer; text-align: center; font-family: 'Fraunces', serif;">
+    🔊 Toque aqui no Telão para ativar áudio e clipes de vídeo!
+  </div>
+
+  <!-- ARENA DE TIMES (PLACAR PRINCIPAL COM PALCO CENTRAL DE VÍDEO) -->
+  <main id="arena-container" class="arena-container">
+    <!-- Time Sol (Desliza suavemente para a esquerda) -->
+    <div id="panel-team-a" class="team-panel team-a">
+      <div class="leader-badge">👑 Na Liderança</div>
+      <div class="team-crest-large" style="background: var(--color-yellow);">
+        <span id="crest-a">☀️</span>
+      </div>
+      <h2 id="name-a" class="team-name-large">Time Sol</h2>
+      <div id="score-a" class="team-score-giant tabular">0</div>
+      <span class="team-sublabel">Pontos Conquistados</span>
+    </div>
+
+    <!-- Coluna Central VS (Esmaece quando o vídeo abre) -->
+    <div id="vs-center-col" class="vs-center-col">
+      <div class="vs-emblem">VS</div>
+      <div id="diff-badge" class="diff-badge">Empate Técnico</div>
+    </div>
+
+    <!-- Palco Central de Vídeo Dance (Abre no espaço do meio entre os dois placares) -->
+    <div id="dance-stage-wrapper" class="dance-stage-wrapper">
+      <video id="dance-video" class="dance-stage-video" playsinline preload="auto" src="./videos/cat_dog_dancing.mp4"></video>
+      <button class="dance-stage-close" onclick="stopDanceVideo()" title="Fechar Dança">✕ Parar</button>
+    </div>
+
+    <!-- Time Nascente (Desliza suavemente para a direita) -->
+    <div id="panel-team-b" class="team-panel team-b">
+      <div class="leader-badge">👑 Na Liderança</div>
+      <div class="team-crest-large" style="background: var(--color-coral);">
+        <span id="crest-b">🔥</span>
+      </div>
+      <h2 id="name-b" class="team-name-large">Time Nascente</h2>
+      <div id="score-b" class="team-score-giant tabular">0</div>
+      <span class="team-sublabel">Pontos Conquistados</span>
+    </div>
+  </main>
+
+  <!-- PALCO DO CRONÔMETRO GIGANTE DO TELÃO (SUBSTITUI O PLACAR QUANDO SOLTO PELO ADMIN) -->
+  <section id="telao-timer-stage" class="telao-timer-stage" style="display: none;">
+    <div class="telao-timer-card">
+      <div class="telao-timer-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 28px;">⏱️</span>
+          <div>
+            <div style="font-family: 'Fraunces', serif; font-size: 24px; font-weight: 800;">Cronômetro da Prova</div>
+            <span class="micro-label" style="font-size: 12px; color: rgba(58, 0, 29, 0.65);">Transmissão Oficial</span>
+          </div>
+        </div>
+        <button class="btn-telao small" onclick="hideTelaoTimer()">✕ Voltar ao Placar</button>
+      </div>
+
+      <div class="telao-timer-inner">
+        <div id="telao-timer-ring" class="telao-timer-ring">
+          <div id="telao-timer-digits" class="telao-timer-digits tabular">02:00</div>
+          <span id="telao-timer-status" class="telao-timer-status">Pronto para Iniciar</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PALCO CINEMATOGRÁFICO DE APRESENTAÇÃO DE PROVAS -->
+  <section id="telao-prova-stage" class="telao-prova-stage" style="display: none;">
+    <button class="btn-telao small" style="position: absolute; top: -10px; right: 24px; z-index: 101; font-size: 12px; padding: 6px 14px;" onclick="cancelProvaPresentation()">✕ Fechar / Voltar ao Placar</button>
+    <div class="prova-stage-container">
+      
+      <!-- Cabeçalho / Título da Prova em Destaque -->
+      <div id="prova-stage-title-wrap" class="prova-stage-title-wrap">
+        <div id="prova-stage-icon" class="prova-stage-icon">🎯</div>
+        <h1 id="prova-stage-title" class="prova-stage-title">Nome da Prova</h1>
+        <div id="prova-stage-category" class="prova-stage-category">Categoria • Duração</div>
+      </div>
+
+      <!-- Regras & Como Funciona (Aparece após o título subir) -->
+      <div id="prova-stage-rules-card" class="prova-stage-rules-card" style="display: none;">
+        <div class="rules-header-pill">📜 REGRAS & COMO FUNCIONA</div>
+        <p id="prova-stage-desc" class="rules-body-text"></p>
+
+        <div class="rules-footer-grid">
+          <div class="rule-box">
+            <span class="rule-box-label">🏆 CRITÉRIO DE PONTUAÇÃO</span>
+            <div id="prova-stage-score-rule" class="rule-box-val"></div>
+          </div>
+          <div class="rule-box" id="prova-stage-tips-box">
+            <span class="rule-box-label">💡 DICAS DA LIDERANÇA</span>
+            <ul id="prova-stage-tips-list" class="rule-box-tips"></ul>
+          </div>
+        </div>
+
+        <!-- Barra de Progresso / Contagem de 30 segundos -->
+        <div class="rules-timer-bar-wrap">
+          <div class="rules-timer-info">
+            <span>⏱️ Apresentação das Regras (Ao Vivo)</span>
+            <span id="prova-stage-countdown-text" class="tabular">30s</span>
+          </div>
+          <div class="rules-timer-track">
+            <div id="prova-stage-timer-fill" class="rules-timer-fill"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BARRA DE DISPUTA / EQUILÍBRIO -->
+  <section class="clash-section">
+    <div class="clash-info-row">
+      <span id="clash-text-a" class="tabular">Time Sol: 50%</span>
+      <span style="font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(58,0,29,0.6);">Disputa Pelo Troféu</span>
+      <span id="clash-text-b" class="tabular">Time Nascente: 50%</span>
+    </div>
+    <div class="clash-bar-track">
+      <div id="clash-fill-a" class="clash-bar-fill-a" style="width: 50%;"></div>
+      <div id="clash-fill-b" class="clash-bar-fill-b" style="width: 50%;"></div>
+    </div>
+  </section>
+
+  <!-- TICKER DE FEED / ÚLTIMOS EVENTOS -->
+  <footer class="feed-ticker">
+    <span class="feed-badge">Última Pontuação</span>
+    <span id="latest-feed" class="feed-text">Aguardando o início oficial das disputas da Gincana JBSN...</span>
+  </footer>
+
+  <script>
+    const STORAGE_KEY = 'confra_jbsn_state_v1';
+    let previousScoreA = 0;
+    let previousScoreB = 0;
+
+    // BroadcastChannel para sincronização instantânea com a aba principal
+    const channel = new BroadcastChannel('confra_jbsn_channel');
+    channel.onmessage = (event) => {
+      if (!event.data) return;
+      handleRemoteAction(event.data);
+    };
+
+    // Sincronização via evento storage
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY) {
+        updateTelao();
+      }
+    });
+
+    // Sincronização via Servidor Realtime (SSE) para Celular -> PC
+    function initServerSync() {
+      // 1. Busca imediata do estado
+      fetchServerState();
+
+      // 2. Conexão SSE em tempo real
+      try {
+        const es = new EventSource('/api/events');
+        es.addEventListener('state', (e) => {
+          try {
+            const data = JSON.parse(e.data);
+            if (data && data.teams) {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+              applyDataToTelao(data);
+            }
+          } catch(err) {}
+        });
+
+        es.addEventListener('action', (e) => {
+          try {
+            const action = JSON.parse(e.data);
+            handleRemoteAction(action);
+          } catch(err) {}
+        });
+
+        es.onerror = () => {
+          setTimeout(fetchServerState, 1500);
+        };
+      } catch(e) {}
+    }
+
+    function handleRemoteAction(action) {
+      if (action.type === 'SYNC') {
+        updateTelao();
+      } else if (action.type === 'PRESENT_PROVA' || action.type === 'SHOW_PROVA_PRESENTATION') {
+        presentProvaOnTelao(action.prova);
+      } else if (action.type === 'CANCEL_PROVA_PRESENTATION') {
+        cancelProvaPresentation();
+      } else if (action.type === 'PLAY_SOUND') {
+        playAudio(action.sound);
+        const label = (action.sound || '').replace(/\.(mp3|wav|ogg)$/i, '');
+        showCelebration(`📢 ${label}`);
+      } else if (action.type === 'PLAY_CELEBRATION') {
+        playCelebration();
+      } else if (action.type === 'SHOW_BANNER') {
+        if (action.sound) playAudio(action.sound);
+        showCelebration(action.title || '⚡ ATENÇÃO GINCANA! ⚡');
+      } else if (action.type === 'PLAY_VIDEO' || action.type === 'PLAY_DANCE') {
+        startDanceVideo(action.video, action.title);
+      } else if (action.type === 'STOP_VIDEO' || action.type === 'STOP_DANCE') {
+        stopDanceVideo();
+      } else if (action.type === 'TOGGLE_VIDEO' || action.type === 'TOGGLE_DANCE') {
+        const arena = document.getElementById('arena-container');
+        if (arena && arena.classList.contains('dance-active')) {
+          stopDanceVideo();
+        } else {
+          startDanceVideo(action.video, action.title);
+        }
+      } else if (action.type === 'TELAO_SWITCH_VIEW') {
+        if (action.view === 'placar') {
+          hideTelaoTimer();
+          stopDanceVideo();
+        } else if (action.view === 'timer') {
+          stopDanceVideo();
+          showTelaoTimer(action.seconds !== undefined ? action.seconds : telaoTimerSeconds, false);
+        }
+      } else if (action.type === 'TELAO_TIMER_START') {
+        showTelaoTimer(action.seconds, true);
+      } else if (action.type === 'TELAO_TIMER_PAUSE') {
+        pauseTelaoTimer();
+      } else if (action.type === 'TELAO_TIMER_RESET') {
+        resetTelaoTimer(action.seconds);
+      } else if (action.type === 'TELAO_TIMER_SHOW') {
+        showTelaoTimer(action.seconds, false);
+      } else if (action.type === 'TELAO_TIMER_HIDE') {
+        hideTelaoTimer();
+      }
+    }
+
+    function fetchServerState() {
+      fetch('/api/state')
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.teams) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            applyDataToTelao(data);
+          }
+        })
+        .catch(() => updateTelao());
+    }
+
+    function applyDataToTelao(data) {
+      if (!data || !data.teams) return;
+      const teamA = data.teams.team_a || { name: 'Time Sol', points: 0, crest: '☀️' };
+      const teamB = data.teams.team_b || { name: 'Time Nascente', points: 0, crest: '🔥' };
+
+      document.getElementById('name-a').textContent = teamA.name;
+      document.getElementById('name-b').textContent = teamB.name;
+      document.getElementById('crest-a').textContent = teamA.crest || '☀️';
+      document.getElementById('crest-b').textContent = teamB.crest || '🔥';
+
+      const scoreAEl = document.getElementById('score-a');
+      const scoreBEl = document.getElementById('score-b');
+
+      if (teamA.points !== previousScoreA) {
+        scoreAEl.classList.remove('score-bump');
+        void scoreAEl.offsetWidth;
+        scoreAEl.classList.add('score-bump');
+        showCelebration(`${teamA.name} marcou pontos! ⚡`);
+        previousScoreA = teamA.points;
+      }
+
+      if (teamB.points !== previousScoreB) {
+        scoreBEl.classList.remove('score-bump');
+        void scoreBEl.offsetWidth;
+        scoreBEl.classList.add('score-bump');
+        showCelebration(`${teamB.name} marcou pontos! ⚡`);
+        previousScoreB = teamB.points;
+      }
+
+      scoreAEl.textContent = teamA.points;
+      scoreBEl.textContent = teamB.points;
+
+      const panelA = document.getElementById('panel-team-a');
+      const panelB = document.getElementById('panel-team-b');
+      const diffBadge = document.getElementById('diff-badge');
+
+      panelA.classList.remove('leading');
+      panelB.classList.remove('leading');
+
+      if (teamA.points > teamB.points) {
+        panelA.classList.add('leading');
+        const diff = teamA.points - teamB.points;
+        diffBadge.textContent = `+${diff} pts de vantagem`;
+      } else if (teamB.points > teamA.points) {
+        panelB.classList.add('leading');
+        const diff = teamB.points - teamA.points;
+        diffBadge.textContent = `+${diff} pts de vantagem`;
+      } else {
+        diffBadge.textContent = 'Empate Técnico';
+      }
+
+      const total = (teamA.points + teamB.points) || 1;
+      const pctA = teamA.points === 0 && teamB.points === 0 ? 50 : Math.round((teamA.points / total) * 100);
+      const pctB = 100 - pctA;
+
+      document.getElementById('clash-fill-a').style.width = pctA + '%';
+      document.getElementById('clash-fill-b').style.width = pctB + '%';
+      document.getElementById('clash-text-a').textContent = `${teamA.name}: ${teamA.points} pts (${pctA}%)`;
+      document.getElementById('clash-text-b').textContent = `${teamB.name}: ${teamB.points} pts (${pctB}%)`;
+
+      if (data.logs && data.logs.length > 0) {
+        const lastLog = data.logs[0];
+        document.getElementById('latest-feed').textContent = 
+          `[${lastLog.timestamp}] ${lastLog.teamName} ganhou +${lastLog.points} pts em "${lastLog.provaTitle}" — ${lastLog.reason || ''}`;
+      }
+    }
+
+    function updateTelao() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        applyDataToTelao(data);
+      } catch (e) {
+        console.warn('Erro ao ler LocalStorage:', e);
+      }
+    }
+
+    function showCelebration(text) {
+      const banner = document.getElementById('celebration-banner');
+      banner.textContent = text;
+      banner.classList.add('show');
+      setTimeout(() => {
+        banner.classList.remove('show');
+      }, 3500);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log('Fullscreen blocked:', err);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    function resolveAudioPath(soundName) {
+      if (!soundName) return '';
+      if (soundName.startsWith('http://') || soundName.startsWith('https://')) return soundName;
+      if (soundName.startsWith('/')) return soundName;
+      if (soundName.startsWith('./')) return soundName.substring(1);
+      if (soundName.startsWith('sounds/') || soundName.startsWith('instants/')) return '/' + soundName;
+      return `/sounds/instants/${soundName}`;
+    }
+
+    function resolveVideoPath(videoName) {
+      if (!videoName) return '/videos/cat_dog_dancing.mp4';
+      if (videoName.startsWith('http://') || videoName.startsWith('https://')) return videoName;
+      if (videoName.startsWith('/')) return videoName;
+      if (videoName.startsWith('./')) return videoName.substring(1);
+      if (videoName.startsWith('videos/')) return '/' + videoName;
+      return `/videos/${videoName}`;
+    }
+
+    let audioContextUnlocked = false;
+    let pendingVideoSrc = null;
+
+    function unlockTelaoAudio() {
+      audioContextUnlocked = true;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) {
+          const ctx = new AudioCtx();
+          if (ctx.state === 'suspended') ctx.resume();
+        }
+      } catch (e) {}
+
+      const video = document.getElementById('dance-video');
+      if (video) {
+        video.muted = false;
+        video.volume = 1;
+      }
+
+      const banner = document.getElementById('audio-unlock-banner');
+      if (banner) banner.style.display = 'none';
+
+      if (pendingVideoSrc) {
+        startDanceVideo(pendingVideoSrc, 'Vídeo Iniciado');
+        pendingVideoSrc = null;
+      }
+    }
+
+    function showUnlockBanner() {
+      const banner = document.getElementById('audio-unlock-banner');
+      if (banner) banner.style.display = 'block';
+    }
+
+    window.addEventListener('click', unlockTelaoAudio);
+    window.addEventListener('touchstart', unlockTelaoAudio);
+    window.addEventListener('keydown', unlockTelaoAudio);
+
+    let currentTelaoAudio = null;
+
+    function playAudio(filename) {
+      if (!filename) return;
+      try {
+        if (currentTelaoAudio) {
+          try {
+            currentTelaoAudio.pause();
+            currentTelaoAudio.currentTime = 0;
+          } catch(e) {}
+        }
+        const src = resolveAudioPath(filename);
+        const audio = new Audio(src);
+        audio.volume = 1;
+        currentTelaoAudio = audio;
+        const p = audio.play();
+        if (p !== undefined) {
+          p.catch(e => {
+            console.warn('Autoplay bloqueado pelo navegador para áudio:', src, e);
+            showUnlockBanner();
+            const altSrc = src.includes('/sounds/instants/') ? src.replace('/sounds/instants/', '/instants/') : src.replace('/instants/', '/sounds/instants/');
+            const fallback = new Audio(altSrc);
+            fallback.volume = 1;
+            currentTelaoAudio = fallback;
+            fallback.play().catch(() => {});
+          });
+        }
+      } catch (e) {
+        console.warn('Erro ao reproduzir áudio:', e);
+      }
+    }
+
+    // ==========================================
+    // APRESENTAÇÃO CINEMATOGRÁFICA DE PROVA
+    // ==========================================
+    let provaPresentationTimeout1 = null;
+    let provaPresentationTimeout2 = null;
+    let provaPresentationInterval = null;
+
+    function presentProvaOnTelao(prova) {
+      if (!prova) return;
+
+      // Cancela apresentação anterior caso esteja ativa
+      cancelProvaPresentation();
+
+      // 1. Esmaece (saída) o placar, cronômetro ou vídeo da tela
+      stopDanceVideo();
+      hideTelaoTimer();
+
+      const arena = document.getElementById('arena-container');
+      const clash = document.querySelector('.clash-section');
+      if (arena) arena.classList.add('presentation-hidden');
+      if (clash) clash.classList.add('presentation-hidden');
+
+      // Preenche os dados da prova
+      document.getElementById('prova-stage-icon').textContent = prova.icon || '🎯';
+      document.getElementById('prova-stage-title').textContent = prova.title;
+      document.getElementById('prova-stage-category').textContent = `${prova.category || 'Geral'} • ⏱️ ${prova.duration || 'Livre'}`;
+      document.getElementById('prova-stage-desc').textContent = prova.description;
+      document.getElementById('prova-stage-score-rule').textContent = prova.scoreRule || 'Definido pela liderança';
+
+      const tipsList = document.getElementById('prova-stage-tips-list');
+      const tipsBox = document.getElementById('prova-stage-tips-box');
+      if (prova.tips && prova.tips.length > 0) {
+        tipsList.innerHTML = prova.tips.map(t => `<li>${t}</li>`).join('');
+        tipsBox.style.display = 'block';
+      } else {
+        tipsBox.style.display = 'none';
+      }
+
+      // Prepara elementos do palco
+      const stage = document.getElementById('telao-prova-stage');
+      const titleWrap = document.getElementById('prova-stage-title-wrap');
+      const rulesCard = document.getElementById('prova-stage-rules-card');
+
+      titleWrap.className = 'prova-stage-title-wrap';
+      titleWrap.style.opacity = '';
+      titleWrap.style.transform = '';
+
+      rulesCard.className = 'prova-stage-rules-card';
+      rulesCard.style.display = 'none';
+
+      stage.style.display = 'flex';
+      stage.style.opacity = '1';
+
+      // 2. Surge (entrada) o nome da prova em destaque com letras grandes ocupando 80% alinhado ao meio
+      setTimeout(() => {
+        titleWrap.classList.add('enter-center');
+        // + toca o instant mario-luigi-victory (junto)
+        playAudio('mario-luigi-victory.mp3');
+      }, 100);
+
+      // 3. Após o impacto do título (3.5 segundos), o nome da prova diminui para tamanho médio e sobe
+      provaPresentationTimeout1 = setTimeout(() => {
+        titleWrap.classList.remove('enter-center');
+        titleWrap.classList.add('docked-top');
+
+        // 4. Surge (entrada) as regras & como funciona a prova abaixo do nome (duração: 30 segundos)
+        setTimeout(() => {
+          rulesCard.style.display = 'block';
+          void rulesCard.offsetWidth;
+          rulesCard.classList.add('enter-rules');
+
+          // Inicia contagem regressiva de 30 segundos e barra de progresso
+          let remainingSeconds = 30;
+          const countEl = document.getElementById('prova-stage-countdown-text');
+          const fillEl = document.getElementById('prova-stage-timer-fill');
+
+          if (countEl) countEl.textContent = `${remainingSeconds}s`;
+          if (fillEl) fillEl.style.width = '100%';
+
+          provaPresentationInterval = setInterval(() => {
+            remainingSeconds--;
+            if (countEl) countEl.textContent = `${remainingSeconds}s`;
+            if (fillEl) fillEl.style.width = `${Math.max(0, (remainingSeconds / 30) * 100)}%`;
+
+            if (remainingSeconds <= 0) {
+              clearInterval(provaPresentationInterval);
+              provaPresentationInterval = null;
+
+              // 5. Saída (descendo) as regras & como funciona e retorna o placar (esmaecer)
+              rulesCard.classList.remove('enter-rules');
+              rulesCard.classList.add('exit-rules');
+              titleWrap.style.opacity = '0';
+              titleWrap.style.transform = 'translateY(-20px)';
+
+              provaPresentationTimeout2 = setTimeout(() => {
+                stage.style.display = 'none';
+                if (arena) arena.classList.remove('presentation-hidden');
+                if (clash) clash.classList.remove('presentation-hidden');
+              }, 800);
+            }
+          }, 1000);
+
+        }, 600);
+
+      }, 3500);
+    }
+
+    function cancelProvaPresentation() {
+      if (provaPresentationTimeout1) clearTimeout(provaPresentationTimeout1);
+      if (provaPresentationTimeout2) clearTimeout(provaPresentationTimeout2);
+      if (provaPresentationInterval) clearInterval(provaPresentationInterval);
+      provaPresentationTimeout1 = null;
+      provaPresentationTimeout2 = null;
+      provaPresentationInterval = null;
+
+      const stage = document.getElementById('telao-prova-stage');
+      const arena = document.getElementById('arena-container');
+      const clash = document.querySelector('.clash-section');
+      if (stage) stage.style.display = 'none';
+      if (arena) arena.classList.remove('presentation-hidden');
+      if (clash) clash.classList.remove('presentation-hidden');
+    }
+
+    // Ação: Celebrar (toca celebration.mp3 e exibe banner)
+    function playCelebration() {
+      playAudio('celebration.mp3');
+      showCelebration('🎉 HORA DE CELEBRAR! 🎉');
+    }
+
+    // Ação: Vídeo / Dance (Desloca placares para os lados e toca no centro com áudio na TV)
+    let danceFadeTimeout = null;
+
+    function startDanceVideo(videoSrc, title) {
+      hideTelaoTimer(); // Garante que o timer feche e o placar/arena apareça
+      const arena = document.getElementById('arena-container');
+      const video = document.getElementById('dance-video');
+      if (!arena || !video) return;
+
+      arena.style.display = 'flex';
+      const clash = document.querySelector('.clash-section');
+      if (clash) clash.style.display = 'block';
+
+      if (danceFadeTimeout) clearTimeout(danceFadeTimeout);
+
+      const resolvedSrc = resolveVideoPath(videoSrc);
+      
+      video.pause();
+      video.currentTime = 0;
+      video.src = resolvedSrc;
+      try { video.load(); } catch(e) {}
+      video.muted = false;
+      video.volume = 1;
+
+      if (title) {
+        showCelebration(`🎬 ${title}`);
+      }
+
+      // 1. Move os placares lateralmente (esquerda e direita) abrindo espaço no centro
+      arena.classList.add('dance-active');
+
+      // 2. Esmaecer para entrar (fade-in)
+      setTimeout(() => {
+        video.classList.add('fade-in');
+      }, 180);
+
+      const p = video.play();
+      if (p !== undefined) {
+        p.catch(err => {
+          console.warn('Vídeo autoplay bloqueado pelo navegador:', err);
+          showUnlockBanner();
+          pendingVideoSrc = resolvedSrc;
+          // Fallback visual mudo se o navegador exigir interação
+          video.muted = true;
+          video.play().catch(() => {});
+        });
+      }
+
+      // 3. Esmaecimento suave de saída (fade-out) 2 segundos antes do clipe terminar
+      video.ontimeupdate = () => {
+        if (video.duration && video.currentTime >= video.duration - 2) {
+          video.classList.remove('fade-in');
+        }
+      };
+
+      video.onended = () => {
+        stopDanceVideo();
+      };
+    }
+
+    function stopDanceVideo() {
+      const arena = document.getElementById('arena-container');
+      const video = document.getElementById('dance-video');
+      if (!arena || !video) return;
+
+      video.classList.remove('fade-in');
+
+      danceFadeTimeout = setTimeout(() => {
+        arena.classList.remove('dance-active');
+        video.pause();
+        video.currentTime = 0;
+      }, 700);
+
+      try {
+        channel.postMessage({ type: 'VIDEO_STOPPED' });
+      } catch(e) {}
+    }
+
+    // ==========================================
+    // CRONÔMETRO DO TELÃO (SUBSTITUI O PLACAR)
+    // ==========================================
+    let telaoTimerInterval = null;
+    let telaoTimerSeconds = 120;
+    let telaoTimerCountdownPlayed = false;
+
+    function showTelaoTimer(seconds, autoStart = false) {
+      // Esconde o placar e a barra de disputa
+      const arena = document.getElementById('arena-container');
+      const clash = document.querySelector('.clash-section');
+      if (arena) arena.style.display = 'none';
+      if (clash) clash.style.display = 'none';
+
+      // Mostra o palco do cronômetro gigante
+      const timerStage = document.getElementById('telao-timer-stage');
+      if (timerStage) timerStage.style.display = 'flex';
+
+      if (seconds !== undefined) {
+        telaoTimerSeconds = seconds;
+        telaoTimerCountdownPlayed = false;
+      }
+      updateTelaoTimerDigits();
+
+      if (autoStart) {
+        startTelaoTimer();
+      }
+    }
+
+    function hideTelaoTimer() {
+      pauseTelaoTimer();
+      const timerStage = document.getElementById('telao-timer-stage');
+      const arena = document.getElementById('arena-container');
+      const clash = document.querySelector('.clash-section');
+
+      if (timerStage) timerStage.style.display = 'none';
+      if (arena) arena.style.display = 'flex';
+      if (clash) clash.style.display = 'block';
+
+      // Avisa via broadcast para desmarcar toggle se aberto em outra aba
+      channel.postMessage({ type: 'TELAO_TIMER_STATE_REPORT', isVisible: false });
+    }
+
+    function startTelaoTimer() {
+      if (telaoTimerInterval) clearInterval(telaoTimerInterval);
+      const st = document.getElementById('telao-timer-status');
+      if (st) st.textContent = 'Contagem Ativa';
+
+      if (telaoTimerSeconds <= 5 && telaoTimerSeconds > 0) {
+        playAudio('countdown-3-2-1-go.mp3');
+        telaoTimerCountdownPlayed = true;
+      } else {
+        playAudio('whistle.wav');
+      }
+
+      telaoTimerInterval = setInterval(() => {
+        telaoTimerSeconds--;
+
+        if (telaoTimerSeconds === 5 && !telaoTimerCountdownPlayed) {
+          playAudio('countdown-3-2-1-go.mp3');
+          telaoTimerCountdownPlayed = true;
+        }
+
+        if (telaoTimerSeconds <= 0) {
+          clearInterval(telaoTimerInterval);
+          telaoTimerInterval = null;
+          telaoTimerSeconds = 0;
+          playAudio('buzzer.wav');
+          const stEl = document.getElementById('telao-timer-status');
+          if (stEl) stEl.textContent = '⏰ TEMPO ESGOTADO!';
+          const ring = document.getElementById('telao-timer-ring');
+          if (ring) {
+            ring.style.borderColor = 'var(--color-coral)';
+            setTimeout(() => { ring.style.borderColor = 'var(--color-ink)'; }, 2500);
+          }
+        }
+        updateTelaoTimerDigits();
+      }, 1000);
+      updateTelaoTimerDigits();
+    }
+
+    function pauseTelaoTimer() {
+      if (telaoTimerInterval) {
+        clearInterval(telaoTimerInterval);
+        telaoTimerInterval = null;
+      }
+      const st = document.getElementById('telao-timer-status');
+      if (st) st.textContent = 'Pausado';
+    }
+
+    function resetTelaoTimer(seconds) {
+      pauseTelaoTimer();
+      telaoTimerSeconds = seconds !== undefined ? seconds : 120;
+      telaoTimerCountdownPlayed = false;
+      const st = document.getElementById('telao-timer-status');
+      if (st) st.textContent = 'Pronto para Iniciar';
+      const ring = document.getElementById('telao-timer-ring');
+      if (ring) ring.style.borderColor = 'var(--color-ink)';
+      updateTelaoTimerDigits();
+    }
+
+    function updateTelaoTimerDigits() {
+      const mins = Math.floor(telaoTimerSeconds / 60);
+      const secs = telaoTimerSeconds % 60;
+      const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      const el = document.getElementById('telao-timer-digits');
+      if (el) el.textContent = formatted;
+    }
+
+    // Tecla ESC para fechar vídeo de dança se estiver ativo
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const arena = document.getElementById('arena-container');
+        if (arena && arena.classList.contains('dance-active')) {
+          stopDanceVideo();
+        }
+      }
+    });
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      initServerSync();
+      setInterval(fetchServerState, 1500);
+    });
+  </script>
+</body>
+</html>

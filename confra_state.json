@@ -1,0 +1,331 @@
+{
+  "teams": {
+    "team_a": {
+      "name": "Time Sol",
+      "points": 5,
+      "crest": "☀️"
+    },
+    "team_b": {
+      "name": "Time Mar",
+      "points": 5,
+      "crest": "🌊"
+    }
+  },
+  "provas": [
+    {
+      "id": "adesivos",
+      "title": "Guerra dos Adesivos (O Dia Todo)",
+      "category": "Furtividade & Resistência",
+      "duration": "Dia Inteiro",
+      "icon": "🏷️",
+      "scoreRule": "1 ponto por adesivo mantido no adversário",
+      "summary": "Cole adesivos nos membros da equipe rival sem ser percebido. Ao final do dia, cada adesivo que permaneceu vale ponto!",
+      "description": "Cole adesivos nos membros da equipe adversária sem que eles percebam! Ao final do dia da confra serão contabilizados todos os adesivos fixados no corpo/roupas dos adversários. Cada adesivo colado e mantido até o final da gincana vale 1 ponto para a equipe que colou. Se a vítima flagrar a colagem no ato ou remover antes da contagem final oficial, o adesivo não é pontuado.",
+      "mediaType": "rules_card",
+      "videoUrl": "",
+      "tips": [
+        "Aja com naturalidade durante conversas, refeições e louvor.",
+        "Locais estratégicos: costas das camisas, barras de calça, bonés.",
+        "Proibido puxar roupas com força ou colar nos cabelos das pessoas."
+      ],
+      "pointsA": 5,
+      "pointsB": 5
+    },
+    {
+      "id": "dois-corpos",
+      "title": "Dois Corpos Ocupam o Mesmo Lugar",
+      "category": "Equilíbrio & Estratégia",
+      "duration": "2 minutos",
+      "icon": "📦",
+      "scoreRule": "1 ponto por membro dentro dos limites 2x2m",
+      "summary": "Colocar o maior número de pessoas dentro de um quadrado 2x2m por 10 segundos sustentados.",
+      "description": "O objetivo é colocar o maior número de membros da equipe em um espaço delimitado de 2x2 metros demarcado com fita no chão. Pode subir nas costas, ombros e abraçar bem apertado! Para a pontuação ser validada, a equipe precisa se manter completamente dentro do limite por pelo menos 10 segundos sem que ninguém toque o chão fora da marcação.",
+      "mediaType": "rules_card",
+      "videoUrl": "",
+      "tips": [
+        "Os participantes com maior equilíbrio e base devem ficar no meio.",
+        "Coloque os membros mais leves nos ombros e costas.",
+        "Use o cronômetro oficial da prova com contagem regressiva para validar os 10 segundos!"
+      ],
+      "pointsA": 0,
+      "pointsB": 0
+    },
+    {
+      "id": "splash",
+      "title": "Splash! Salto na Piscina",
+      "category": "Aquática & Impacto",
+      "duration": "1 rodada por equipe",
+      "icon": "🌊",
+      "scoreRule": "5 pontos para o reservatório mais cheio",
+      "summary": "Pule na piscina espirrando água para encher o balde/reservatório na borda. 1 pulo por membro!",
+      "description": "Encher o reservatório com água da piscina através do impacto do salto! Os membros da equipe devem pular na piscina de modo que a água que espirra ao pular atinja e encha o balde/reservatório posicionado rigorosamente à beira da piscina. Cada membro só pode pular uma única vez! Ao término dos saltos de ambas as equipes, a que tiver o reservatório com maior volume ganha 5 pontos.",
+      "mediaType": "rules_card",
+      "videoUrl": "",
+      "tips": [
+        "Saltos tipo \"bomba\" ou \"bala de canhão\" geram o maior deslocamento de onda.",
+        "Ajuste o ângulo do pulo para direcionar a onda em direção ao balde.",
+        "Segurança em primeiro lugar: cuidado com a borda e escorregões!"
+      ],
+      "pointsA": 0,
+      "pointsB": 0
+    }
+  ],
+  "participants": [
+    {
+      "id": "p6",
+      "name": "Catharina Santos Barreto",
+      "phone": "75999998318",
+      "team": "team_a",
+      "diet": "Frango + Arroz/Macarrão + Tropeiro + Vinagrete"
+    },
+    {
+      "id": "p16",
+      "name": "Ana Lídia Feitosa Rocha Simões",
+      "phone": "79 9877-0558",
+      "team": "team_b",
+      "diet": "Frango + Arroz/Macarrão + Feijão Tropeiro"
+    },
+    {
+      "id": "p13",
+      "name": "Mariana S. Andrade",
+      "phone": "75 999425480",
+      "team": "team_a",
+      "diet": "Panqueca + Arroz/Macarrão + Tropeiro + Maionese"
+    },
+    {
+      "id": "p8",
+      "name": "Heloíse Rodrigues Salgado",
+      "phone": "79988291140",
+      "team": "team_b",
+      "diet": "Carne + Arroz + Feijão em Caldo + Vinagrete"
+    },
+    {
+      "id": "p12",
+      "name": "Gabrielle Silva",
+      "phone": "79981600622",
+      "team": "team_a",
+      "diet": "Panqueca + Arroz/Macarrão + Tropeiro + Vinagrete"
+    },
+    {
+      "id": "p29",
+      "name": "Mirella Victoria de Souza Cunha",
+      "phone": "79 9 9864-8617",
+      "team": "team_b",
+      "diet": "Panqueca + Macarrão + Tropeiro + Maionese"
+    },
+    {
+      "id": "p19",
+      "name": "Odilon Ferreira",
+      "phone": "(79) 99684-1795",
+      "team": "team_a",
+      "diet": "Carne + Arroz/Macarrão + Tropeiro + Maionese"
+    },
+    {
+      "id": "p26",
+      "name": "Renato da Silva Souza",
+      "phone": "79 9 9820-6282",
+      "team": "team_b",
+      "diet": "Panqueca de carne + Feijão Tropeiro"
+    },
+    {
+      "id": "p27",
+      "name": "Israel Teles",
+      "phone": "79996634247",
+      "team": "team_a",
+      "diet": "Frango + Arroz/Macarrão + Tropeiro + Maionese"
+    },
+    {
+      "id": "p22",
+      "name": "Yuri Niemaia Rodrigues Santana",
+      "phone": "79988725839",
+      "team": "team_b",
+      "diet": "Frango + Arroz + Tropeiro + Vinagrete"
+    },
+    {
+      "id": "p24",
+      "name": "Raquel Souza dos Santos Marques",
+      "phone": "79999423109",
+      "team": "team_a",
+      "diet": "Frango + Macarrão + Feijão Tropeiro"
+    },
+    {
+      "id": "p25",
+      "name": "Danilo Silva dos Santos Marques",
+      "phone": "79988802444",
+      "team": "team_b",
+      "diet": "Frango + Arroz/Macarrão + Tropeiro + Vinagrete"
+    },
+    {
+      "id": "p5",
+      "name": "Keven Santana Martins",
+      "phone": "79981231152",
+      "team": "team_a",
+      "diet": "Frango + Arroz/Macarrão + Tropeiro + Vinagrete"
+    },
+    {
+      "id": "p3",
+      "name": "Lucas Daniel Figueiredo",
+      "phone": "79 99878-8404",
+      "team": "team_b",
+      "diet": "Panqueca + Macarrão + Tropeiro + Maionese"
+    },
+    {
+      "id": "p20",
+      "name": "Gabriel Alves Santos",
+      "phone": "79996462727",
+      "team": "team_a",
+      "diet": "Panqueca + Macarrão + Tropeiro + Maionese"
+    },
+    {
+      "id": "p15",
+      "name": "Vitor de Assis Simões Araújo",
+      "phone": "79991238807",
+      "team": "team_b",
+      "diet": "Carne + Arroz/Macarrão + Tropeiro + Vinagrete"
+    },
+    {
+      "id": "p23",
+      "name": "Thaiane Lorena Nascimento Silva",
+      "phone": "79991995558",
+      "team": "team_a",
+      "diet": "Carne + Arroz/Macarrão + Feijão Caldo + Maionese"
+    },
+    {
+      "id": "p18",
+      "name": "Larissa Vasconcelos Vieira",
+      "phone": "79998413012",
+      "team": "team_b",
+      "diet": "Carne + Arroz + Feijão em Caldo + Vinagrete"
+    },
+    {
+      "id": "p14",
+      "name": "Rebeca Santos Ribeiro",
+      "phone": "94981290818",
+      "team": "team_a",
+      "diet": "Carne + Arroz/Macarrão + Tropeiro + Vinagrete"
+    },
+    {
+      "id": "p17",
+      "name": "Yuri",
+      "phone": "79999338091",
+      "team": "team_b",
+      "diet": "Frango + Somente Macarrão"
+    },
+    {
+      "id": "p30",
+      "name": "Stephanie Melo Moacir Lima",
+      "phone": "79996129797",
+      "team": "team_a",
+      "diet": "Carne + Arroz/Macarrão + Tropeiro + Vinagrete"
+    },
+    {
+      "id": "p11",
+      "name": "Marcos Aurélio de Melo Junior",
+      "phone": "79 99191-6029",
+      "team": "team_b",
+      "diet": "Carne + Arroz + Tropeiro + Vinagrete"
+    },
+    {
+      "id": "p1",
+      "name": "Cleber Jesus Dias Filho",
+      "phone": "79991802481",
+      "team": "team_a",
+      "diet": "Frango + Arroz + Feijão Tropeiro"
+    },
+    {
+      "id": "p31",
+      "name": "Lucca de Queiroz e Paulon",
+      "phone": "(79) 99854-9286",
+      "team": "team_b",
+      "diet": "Carne + Arroz/Macarrão + Feijão Caldo + Maionese"
+    },
+    {
+      "id": "p28",
+      "name": "Isabela Souza Silva",
+      "phone": "79 999332189",
+      "team": "team_a",
+      "diet": "Carne + Arroz + Feijão Tropeiro"
+    },
+    {
+      "id": "p21",
+      "name": "Neto Teles",
+      "phone": "79999196173",
+      "team": "team_b",
+      "diet": "Carne + Macarrão + Tropeiro + Maionese"
+    },
+    {
+      "id": "p2",
+      "name": "Talita Dantas Lima Santos",
+      "phone": "79 9946-3929",
+      "team": "team_a",
+      "diet": "Frango + Arroz + Feijão em Caldo"
+    },
+    {
+      "id": "p4",
+      "name": "Ana Luyza Melo da Paixão",
+      "phone": "79998415031",
+      "team": "team_b",
+      "diet": "Panqueca + Arroz + Tropeiro + Vinagrete"
+    },
+    {
+      "id": "p9",
+      "name": "Ian Marques Bandeira Silveira",
+      "phone": "79 996303054",
+      "team": "team_a",
+      "diet": "Carne + Macarrão + Feijão Tropeiro"
+    },
+    {
+      "id": "p10",
+      "name": "João Pedro Silva dos Santos",
+      "phone": "79998542147",
+      "team": "team_b",
+      "diet": "Carne assada + Somente Macarrão"
+    },
+    {
+      "id": "p7",
+      "name": "Grazielle Rocha Torres",
+      "phone": "79998857104",
+      "team": "team_a",
+      "diet": "Frango + Arroz/Macarrão + Tropeiro"
+    }
+  ],
+  "logs": [
+    {
+      "id": "1794937447327",
+      "teamId": "team_a",
+      "teamName": "Time Sol",
+      "provaTitle": "Guerra dos Adesivos (O Dia Todo)",
+      "points": -1,
+      "reason": "Lançamento rápido do Host (-1 pts)",
+      "timestamp": "14:44"
+    },
+    {
+      "id": "1794937444696",
+      "teamId": "team_b",
+      "teamName": "Time Nascente",
+      "provaTitle": "Guerra dos Adesivos (O Dia Todo)",
+      "points": 5,
+      "reason": "Lançamento rápido do Host (+5 pts)",
+      "timestamp": "14:44"
+    },
+    {
+      "id": "1794937443099",
+      "teamId": "team_a",
+      "teamName": "Time Sol",
+      "provaTitle": "Guerra dos Adesivos (O Dia Todo)",
+      "points": 5,
+      "reason": "Lançamento rápido do Host (+5 pts)",
+      "timestamp": "14:44"
+    },
+    {
+      "id": "1794937441653",
+      "teamId": "team_a",
+      "teamName": "Time Sol",
+      "provaTitle": "Guerra dos Adesivos (O Dia Todo)",
+      "points": 1,
+      "reason": "Lançamento rápido do Host (+1 pts)",
+      "timestamp": "14:44"
+    }
+  ],
+  "adminPin": "1234"
+}

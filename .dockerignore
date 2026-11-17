@@ -1,0 +1,6 @@
+.git
+.github
+*.md
+instants
+__pycache__
+*.pyc

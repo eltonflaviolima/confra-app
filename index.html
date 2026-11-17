@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <title>Confra JBSN — Gincana da Juventude</title>
+
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#FFF9EE">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Confra JBSN">
+  <link rel="manifest" href="./manifest.json">
+
+  <!-- Typography (Fraunces & Noto Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,700&family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Design System Stylesheet -->
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+  <!-- ====================================================
+       GATEWAY / TELA DE ENTRADA (VISÃO DO APP)
+       ==================================================== -->
+  <div id="gateway-overlay" class="gateway-overlay">
+    <div id="gateway-slider" class="gateway-slider">
+
+      <!-- PANE 0: SELEÇÃO DA VISÃO DO APP -->
+      <section class="gateway-pane no-scrollbar" id="pane-role-select">
+        <div class="gateway-box">
+          <div class="gateway-header-brand">
+            <span class="brand-seed" style="width: 44px; height: 44px; margin-bottom: 12px;"></span>
+            <h1 class="font-display" style="font-size: 32px; font-weight: 800; color: var(--color-ink-primary); line-height: 1;">Confra JBSN</h1>
+            <p style="font-size: 13px; font-weight: 700; color: var(--color-ink-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px;">Gincana da Juventude 2026</p>
+          </div>
+
+          <div class="gateway-role-label">Visão do app:</div>
+
+          <!-- Botão 1: Participante -->
+          <div class="btn-gateway-role" onclick="gatewayGoTo(1)">
+            <div class="gateway-role-icon" style="background: var(--color-accent-yellow-light);">
+              <span>👥</span>
+            </div>
+            <div class="gateway-role-info">
+              <div class="gateway-role-title">Participante</div>
+              <div class="gateway-role-desc">Acompanhe seu time, placar e provas</div>
+            </div>
+            <span style="font-size: 20px; font-weight: 800; color: var(--color-ink-muted);">→</span>
+          </div>
+
+          <!-- Botão 2: Host -->
+          <div class="btn-gateway-role" onclick="gatewayGoTo(2)">
+            <div class="gateway-role-icon" style="background: var(--color-accent-mint-light);">
+              <span>🎙️</span>
+            </div>
+            <div class="gateway-role-info">
+              <div class="gateway-role-title">Host (Apresentador)</div>
+              <div class="gateway-role-desc">Controle do telão, som e pontuação</div>
+            </div>
+            <span style="font-size: 20px; font-weight: 800; color: var(--color-ink-muted);">→</span>
+          </div>
+
+          <!-- Botão 3: Telão (Abre diretamente sem telas intermediárias) -->
+          <div class="btn-gateway-role" onclick="openTelaoDirect()">
+            <div class="gateway-role-icon" style="background: var(--color-accent-coral-light);">
+              <span>📺</span>
+            </div>
+            <div class="gateway-role-info">
+              <div class="gateway-role-title">Telão</div>
+              <div class="gateway-role-desc">Projeção ao vivo na TV em tela cheia</div>
+            </div>
+            <span style="font-size: 20px; font-weight: 800; color: var(--color-ink-muted);">↗</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANE 1: SELEÇÃO DE QUEM SOU (PARTICIPANTE) -->
+      <section class="gateway-pane no-scrollbar" id="pane-participant-select">
+        <div class="gateway-box" style="height: 100%; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <button class="btn-tactile small secondary btn-back" onclick="gatewayGoTo(0)">
+              <span>←</span> Voltar
+            </button>
+            <span class="micro-label" style="font-size: 11px;">Identificação</span>
+          </div>
+
+          <div style="text-align: center; margin-bottom: 14px;">
+            <h2 class="font-display" style="font-size: 24px; font-weight: 800; color: var(--color-ink-primary);">Quem é você?</h2>
+            <p style="font-size: 13px; color: var(--color-ink-muted); margin-top: 2px;">Selecione seu nome para entrar na sua equipe:</p>
+          </div>
+
+          <!-- Busca de Nome -->
+          <div class="search-input-wrapper" style="margin-bottom: 12px;">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input id="search-participant-entry" class="search-input" type="text" placeholder="Buscar seu nome..." oninput="filterEntryParticipants(this.value)">
+          </div>
+
+          <!-- Lista Rolável de Inscritos -->
+          <div id="entry-participants-list" class="no-scrollbar" style="flex: 1; overflow-y: auto; padding-right: 4px; display: flex; flex-direction: column; gap: 8px;">
+            <!-- Renderizado dinamicamente via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- PANE 2: INPUT DE SENHA DO HOST -->
+      <section class="gateway-pane no-scrollbar" id="pane-host-auth">
+        <div class="gateway-box">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+            <button class="btn-tactile small secondary btn-back" onclick="gatewayGoTo(0)">
+              <span>←</span> Voltar
+            </button>
+            <span class="micro-label" style="font-size: 11px;">Acesso Restrito</span>
+          </div>
+
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--color-accent-mint-light); border: var(--border-solid); display: inline-flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 12px; box-shadow: var(--shadow-tactile-sm);">
+              🔐
+            </div>
+            <h2 class="font-display" style="font-size: 24px; font-weight: 800; color: var(--color-ink-primary);">Acesso do Host</h2>
+            <p style="font-size: 13px; color: var(--color-ink-muted); margin-top: 4px;">Digite a senha de organizador para liberar o painel.</p>
+          </div>
+
+          <form onsubmit="event.preventDefault(); verifyHostPassword();">
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label">Senha do Host</label>
+              <input id="host-password-input" class="form-input" type="password" placeholder="Digite a senha..." autocomplete="current-password" style="font-size: 18px; text-align: center; letter-spacing: 0.1em;">
+              <div id="host-auth-error" style="display: none; color: #DC2626; font-size: 12px; font-weight: 700; margin-top: 6px; text-align: center;"></div>
+            </div>
+
+            <button type="submit" class="btn-tactile primary" style="font-size: 16px; padding: 14px;">
+              Entrar como Host
+            </button>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- CONTAINER MOBILE PWA -->
+  <div class="mobile-screen" id="main-mobile-screen" style="display: none;">
+
+    <!-- HEADER DA APLICAÇÃO -->
+    <header class="app-header">
+      <div class="brand-wrapper">
+        <span class="brand-seed"></span>
+        <div class="brand-title-group">
+          <h1>Confra JBSN</h1>
+          <span>Juventude Sol Nascente</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Botão Perfil do Participante Conectado -->
+        <button id="btn-participant-profile" class="btn-profile-pill" onclick="openProfileModal()" title="Ver meu perfil">
+          <span id="header-user-crest">👤</span>
+          <span id="header-user-name">Participante</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ADMIN BADGE STRIP (VISÍVEL APENAS QUANDO MODO LÍDER ESTÁ ATIVO) -->
+    <div id="admin-badge-strip" class="admin-badge-strip" style="display: none;">
+      <div class="admin-badge-left">
+        <span class="admin-badge-pulse"></span>
+        <span>Modo Organizador Ativo</span>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-tactile small secondary" onclick="openEditTeamsModal()">✏️ Equipes</button>
+        <a href="./tela.html" target="_blank" class="btn-tactile small secondary" style="text-decoration: none; padding: 4px 10px; font-size: 11px;">
+          📺 Telão
+        </a>
+        <button class="btn-tactile secondary small" onclick="toggleAdminLock()">Bloquear</button>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO ENTRE TELAS / TABS -->
+    <nav class="segmented-control" role="tablist">
+      <div id="tab-btn-placar" class="segment-tab active" onclick="switchMainTab('placar')">
+        <span>🏆 Placar</span>
+      </div>
+      <div id="tab-btn-provas" class="segment-tab" onclick="switchMainTab('provas')">
+        <span>📜 Provas</span>
+      </div>
+      <div id="tab-btn-instants" class="segment-tab admin-only" style="display: none;" onclick="switchMainTab('instants')">
+        <span>🎛️ Instants</span>
+      </div>
+      <div id="tab-btn-telao" class="segment-tab admin-only" style="display: none;" onclick="switchMainTab('telao')">
+        <span>📺 Telão</span>
+      </div>
+    </nav>
+
+    <!-- ====================================================
+         VIEW 1: PLACAR GERAL & FEED DA GINCANA
+         ==================================================== -->
+    <section id="view-placar" class="tab-view-content">
+      <!-- PLACAR HERO -->
+      <section class="scoreboard-hero">
+        <div class="scoreboard-teams-row">
+          <!-- Time A -->
+          <div class="team-score-card">
+            <div class="team-crest" style="background: var(--color-accent-yellow-light);">
+              <span id="team-a-crest">☀️</span>
+            </div>
+            <div id="team-a-name" class="team-name">Time Sol</div>
+            <div id="team-a-pts" class="team-pts-giant tabular">0</div>
+            <span class="team-pts-label">Pontos</span>
+          </div>
+
+          <!-- VS Badge Central -->
+          <div class="vs-badge-center">
+            <span>VS</span>
+          </div>
+
+          <!-- Time B -->
+          <div class="team-score-card">
+            <div class="team-crest" style="background: var(--color-accent-coral-light);">
+              <span id="team-b-crest">🔥</span>
+            </div>
+            <div id="team-b-name" class="team-name">Time Nascente</div>
+            <div id="team-b-pts" class="team-pts-giant tabular">0</div>
+            <span class="team-pts-label">Pontos</span>
+          </div>
+        </div>
+
+        <!-- Barra de Disputa / Equilíbrio -->
+        <div class="clash-bar-wrapper">
+          <div class="clash-bar-labels">
+            <span id="label-pct-a" class="tabular">Time Sol: 50%</span>
+            <span id="label-pct-b" class="tabular">Time Nascente: 50%</span>
+          </div>
+          <div class="clash-bar-track">
+            <div id="clash-fill-a" class="clash-bar-fill-a" style="width: 50%;"></div>
+            <div id="clash-fill-b" class="clash-bar-fill-b" style="width: 50%;"></div>
+          </div>
+        </div>
+
+        <!-- Ações do Administrador no Placar -->
+        <div class="admin-only" style="display: none; margin-top: 14px;">
+          <button class="btn-tactile primary" onclick="openScoreModal()">
+            <span>⚡ Lançar Pontos na Gincana</span>
+          </button>
+          <div style="margin-top: 8px; text-align: center;">
+            <button class="btn-tactile small secondary" onclick="openEditTeamsModal()">
+              <span>✏️ Editar Nome das Equipes</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feed Oficial da Gincana -->
+      <article class="bento-card">
+        <div class="card-header-tint" style="background: var(--color-accent-mint-light);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 16px;">⚡</span>
+            <span class="micro-label" style="color: #1E3A1E;">Feed da Gincana</span>
+          </div>
+          <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #2E7D32;">Ao Vivo</span>
+        </div>
+        <div class="card-body">
+          <div id="logs-container">
+            <!-- Gerado via JavaScript -->
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ====================================================
+         VIEW 2: LISTA DE PROVAS (COM REGRAS & MÍDIA)
+         ==================================================== -->
+    <section id="view-provas" class="tab-view-content" style="display: none;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">Provas da Gincana</h2>
+        <button class="btn-tactile small primary admin-only" style="display: none; width: auto;" onclick="openNewProvaModal()">
+          + Nova Prova
+        </button>
+      </div>
+
+      <div id="provas-list-container">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </section>
+
+    <!-- ====================================================
+         VIEW 3: MESA DE INSTANTS (TAB DEDICADA DO ORGANIZADOR)
+         ==================================================== -->
+    <section id="view-instants" class="tab-view-content" style="display: none;">
+      <article class="bento-card">
+        <div class="card-header-tint" style="background: var(--color-accent-yellow-light);">
+          <span class="micro-label">Mesa Oficial de Som & Instants</span>
+          <span style="font-size: 12px; font-weight: 700; color: #B45309;">MyInstants JBSN</span>
+        </div>
+        <div class="card-body">
+          <p style="font-size: 13px; color: var(--color-ink-muted); margin-bottom: 16px; text-align: center;">
+            Botões arcade de alta fidelidade para animar a gincana, contagens, buzinas e comemorações:
+          </p>
+          <div id="instants-grid-full" class="instants-grid">
+            <!-- Renderizado dinamicamente via JS -->
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ====================================================
+         VIEW 6: CONTROLE DE PROJEÇÃO NO TELÃO (ADMIN)
+         ==================================================== -->
+    <section id="view-telao" class="tab-view-content" style="display: none;">
+      <!-- Card Conexão & Status -->
+      <article class="bento-card">
+        <div class="card-header-tint" style="background: var(--color-accent-mint-light);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 16px;">📺</span>
+            <span class="micro-label" style="color: var(--color-ink-primary);">Projeção Oficial do Telão</span>
+          </div>
+          <span class="live-indicator" style="font-size: 11px; padding: 3px 8px; border-width: 1.5px;">
+            <span class="live-dot" style="width: 8px; height: 8px;"></span> Ao Vivo
+          </span>
+        </div>
+        <div class="card-body">
+          <p style="font-size: 13px; color: var(--color-ink-muted); margin-bottom: 12px;">
+            Controle remoto em tempo real para a TV / projetor da gincana conectado em <code>/tela</code>.
+          </p>
+          <a href="./tela.html" target="_blank" class="btn-tactile small secondary" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;">
+            <span>🖥️ Abrir Tela do Telão (/tela)</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- Card Clipes & Vídeos no Telão -->
+      <article class="bento-card" style="margin-bottom: 16px;">
+        <div class="card-header-tint" style="background: var(--color-accent-coral-light);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 18px;">🎬</span>
+            <span class="micro-label" style="color: var(--color-ink-primary);">Vídeos & Danças no Telão</span>
+          </div>
+          <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #9E1F3B;">Áudio na TV</span>
+        </div>
+        <div class="card-body">
+          <p style="font-size: 12px; color: var(--color-ink-muted); margin-bottom: 12px;">
+            Ao tocar num vídeo, os placares do Telão deslizam para os lados e o clipe passa no centro com som na TV:
+          </p>
+          <div id="videos-grid-telao" class="instants-grid">
+            <!-- Renderizado dinamicamente via JS / renderVideos() -->
+          </div>
+
+          <!-- Botão Parar Vídeo no Telão -->
+          <button class="btn-tactile secondary" style="width: 100%; font-size: 13px; font-weight: 800; padding: 12px; border-color: var(--color-accent-coral);" onclick="telaoCtrl.stopVideo()">
+            <span>⏹️ Parar Vídeo / Restaurar Placar</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card Intervenções de Som & Banners no Telão -->
+      <article class="bento-card" style="margin-bottom: 16px;">
+        <div class="card-header-tint" style="background: var(--color-accent-yellow-light);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 18px;">📢</span>
+            <span class="micro-label" style="color: var(--color-ink-primary);">Intervenções & Banners no Telão</span>
+          </div>
+          <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #B45309;">Som na TV</span>
+        </div>
+        <div class="card-body">
+          <p style="font-size: 12px; color: var(--color-ink-muted); margin-bottom: 12px;">
+            Dispara animações visuais com som sincronizado nos alto-falantes da quadra/telão:
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <!-- Celebrar -->
+            <button class="btn-tactile primary" style="height: auto; padding: 14px 10px; flex-direction: column; gap: 4px;" onclick="telaoCtrl.celebrate()">
+              <span style="font-size: 24px;">🎉</span>
+              <span style="font-size: 13px; font-weight: 800;">Celebrar</span>
+              <span style="font-size: 10px; opacity: 0.85; font-weight: 600;">Som Celebration</span>
+            </button>
+
+            <!-- Tensão Máxima -->
+            <button class="btn-tactile" style="background: var(--color-accent-lilac-light); color: var(--color-ink-primary); height: auto; padding: 14px 10px; flex-direction: column; gap: 4px;" onclick="telaoCtrl.triggerBanner('tension', '⚡ MOMENTO DE TENSÃO! ⚡', 'tension.wav')">
+              <span style="font-size: 24px;">⚡</span>
+              <span style="font-size: 13px; font-weight: 800;">Momento Tensão</span>
+              <span style="font-size: 10px; opacity: 0.85; font-weight: 600;">Batida Suspense</span>
+            </button>
+
+            <!-- Palmas Torcida -->
+            <button class="btn-tactile mint" style="height: auto; padding: 14px 10px; flex-direction: column; gap: 4px;" onclick="telaoCtrl.triggerBanner('applause', '👏 SHOW DA TORCIDA! 👏', 'applause.wav')">
+              <span style="font-size: 24px;">👏</span>
+              <span style="font-size: 13px; font-weight: 800;">Palmas Torcida</span>
+              <span style="font-size: 10px; opacity: 0.85; font-weight: 600;">Aplausos Gerais</span>
+            </button>
+
+            <!-- Errou Faustão -->
+            <button class="btn-tactile coral" style="height: auto; padding: 14px 10px; flex-direction: column; gap: 4px;" onclick="telaoCtrl.triggerBanner('errou', '❌ ERROUUU! ❌', 'errou.wav')">
+              <span style="font-size: 24px;">❌</span>
+              <span style="font-size: 13px; font-weight: 800;">Errou / Faustão</span>
+              <span style="font-size: 10px; opacity: 0.9; font-weight: 600;">Efeito Clássico</span>
+            </button>
+
+            <!-- Buzina DJ -->
+            <button class="btn-tactile" style="background: var(--color-accent-sky-light); color: var(--color-ink-primary); height: auto; padding: 14px 10px; flex-direction: column; gap: 4px;" onclick="telaoCtrl.triggerBanner('airhorn', '📯 TOCA A BUZINA DJ! 📯', 'airhorn.wav')">
+              <span style="font-size: 24px;">📯</span>
+              <span style="font-size: 13px; font-weight: 800;">Buzina DJ</span>
+              <span style="font-size: 10px; opacity: 0.85; font-weight: 600;">Airhorn Festivo</span>
+            </button>
+
+            <!-- Rufem os Tambores -->
+            <button class="btn-tactile" style="background: var(--color-surface-tint); color: var(--color-ink-primary); height: auto; padding: 14px 10px; flex-direction: column; gap: 4px;" onclick="telaoCtrl.triggerBanner('drumroll', '🥁 RUFEM OS TAMBORES! 🥁', 'drumroll.wav')">
+              <span style="font-size: 24px;">🥁</span>
+              <span style="font-size: 13px; font-weight: 800;">Tambores</span>
+              <span style="font-size: 10px; opacity: 0.85; font-weight: 600;">Rufar de Caixa</span>
+            </button>
+
+            <!-- Smash Vitória -->
+            <button class="btn-tactile primary" style="height: auto; padding: 14px 10px; flex-direction: column; gap: 4px;" onclick="telaoCtrl.triggerBanner('smash_vic', '🏆 VITÓRIA ÉPICA! 🏆', 'super-smash-bros-mario-luigi-victory.mp3')">
+              <span style="font-size: 24px;">🏆</span>
+              <span style="font-size: 13px; font-weight: 800;">Smash Vitória</span>
+              <span style="font-size: 10px; opacity: 0.85; font-weight: 600;">Fanfarra Épica</span>
+            </button>
+
+            <!-- Apito do Juiz -->
+            <button class="btn-tactile secondary" style="height: auto; padding: 14px 10px; flex-direction: column; gap: 4px;" onclick="telaoCtrl.triggerBanner('whistle', '📢 APITO DO JUIZ! 📢', 'whistle.wav')">
+              <span style="font-size: 24px;">📢</span>
+              <span style="font-size: 13px; font-weight: 800;">Apito Juiz</span>
+              <span style="font-size: 10px; opacity: 0.85; font-weight: 600;">Parada Oficial</span>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card Cronômetro no Telão (Substitui o Placar) -->
+      <article class="bento-card">
+        <div class="card-header-tint" style="background: var(--color-surface-tint);">
+          <span class="micro-label">Cronômetro no Telão</span>
+          <span id="telao-timer-admin-status" class="tag-badge" style="background: var(--color-accent-mint-light); color: #2E7D32; font-size: 11px;">
+            📺 Telão Exibindo: Placar Geral
+          </span>
+        </div>
+        <div class="card-body" style="text-align: center;">
+          <p style="font-size: 12px; color: var(--color-ink-muted); margin-bottom: 14px;">
+            Ao <b>soltar o timer</b>, o telão recolhe o placar e projeta a contagem regressiva gigante.
+          </p>
+
+          <!-- Presets de Tempo -->
+          <div class="timer-presets" style="margin-bottom: 16px;">
+            <button type="button" class="preset-chip" onclick="telaoCtrl.setDuration(10, this)">10s</button>
+            <button type="button" class="preset-chip" onclick="telaoCtrl.setDuration(30, this)">30s</button>
+            <button type="button" class="preset-chip" onclick="telaoCtrl.setDuration(60, this)">1 min</button>
+            <button type="button" class="preset-chip active" onclick="telaoCtrl.setDuration(120, this)">2 min</button>
+            <button type="button" class="preset-chip" onclick="telaoCtrl.setDuration(180, this)">3 min</button>
+            <button type="button" class="preset-chip" onclick="telaoCtrl.setDuration(300, this)">5 min</button>
+          </div>
+
+          <!-- Mostrador Digital do Cronômetro do Telão -->
+          <div style="background: var(--color-surface-tint); border: var(--border-solid); border-radius: 24px; padding: 18px 24px; display: inline-block; margin-bottom: 18px; box-shadow: var(--shadow-tactile-sm);">
+            <div id="admin-telao-timer-display" class="tabular" style="font-family: 'Fraunces', serif; font-size: 52px; font-weight: 800; color: var(--color-ink-primary); line-height: 1;">
+              02:00
+            </div>
+            <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink-muted);">Contagem no Telão</span>
+          </div>
+
+          <!-- Controles de Ação do Cronômetro -->
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button id="btn-admin-telao-toggle" class="btn-tactile primary" style="font-size: 16px; padding: 14px;" onclick="telaoCtrl.toggleTimerOnTelao()">
+              ▶️ Soltar no Telão (Iniciar)
+            </button>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-tactile secondary small" style="flex: 1;" onclick="telaoCtrl.reset()">
+                🔄 Resetar
+              </button>
+              <button class="btn-tactile secondary small" style="flex: 1;" onclick="telaoCtrl.hideTimerFromTelao()">
+                📺 Voltar ao Placar
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+  </div> <!-- /mobile-screen -->
+
+  <!-- ====================================================
+       BOTTOM NAVIGATION BAR FIXA PWA
+       ==================================================== -->
+  <nav class="bottom-nav">
+    <div id="nav-btn-placar" class="nav-item active" onclick="switchMainTab('placar')">
+      <div class="nav-icon-wrapper">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A001D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+          <path d="M4 22h16"></path>
+          <path d="M10 14.66V17c0 .55-.45 1-1 1H7"></path>
+          <path d="M14 14.66V17c0 .55.45 1 1 1h2"></path>
+          <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+        </svg>
+      </div>
+      <span class="nav-label">Placar</span>
+    </div>
+
+    <div id="nav-btn-provas" class="nav-item" onclick="switchMainTab('provas')">
+      <div class="nav-icon-wrapper">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A001D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+      </div>
+      <span class="nav-label">Provas</span>
+    </div>
+
+    <div id="nav-btn-instants" class="nav-item admin-only" style="display: none;" onclick="switchMainTab('instants')">
+      <div class="nav-icon-wrapper">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A001D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+      </div>
+      <span class="nav-label">Instants</span>
+    </div>
+
+    <div id="nav-btn-telao" class="nav-item admin-only" style="display: none;" onclick="switchMainTab('telao')">
+      <div class="nav-icon-wrapper">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A001D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+      </div>
+      <span class="nav-label">Telão</span>
+    </div>
+  </nav>
+
+  <!-- ====================================================
+       MODAL 1: DETALHE COMPLETO DA PROVA (REGRAS & VÍDEO)
+       ==================================================== -->
+  <div id="modal-prova-detail" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div>
+          <span id="modal-prova-category" class="micro-label">Categoria</span>
+          <h2 id="modal-prova-title" class="font-display" style="font-size: 22px; font-weight: 800;">Título da Prova</h2>
+        </div>
+        <button class="modal-close-btn" onclick="closeModals()">✕</button>
+      </div>
+
+      <!-- Mídia / Vídeo da Prova -->
+      <div id="modal-prova-media"></div>
+
+      <!-- Descrição e Regras Oficiais -->
+      <div class="form-group">
+        <label class="form-label">📜 Regras & Como Funciona</label>
+        <p id="modal-prova-desc" style="font-size: 14px; line-height: 1.5; color: var(--color-ink-primary); background: var(--color-surface-pure); padding: 14px; border-radius: 14px; border: var(--border-thin);"></p>
+      </div>
+
+      <!-- Critério de Pontuação -->
+      <div class="form-group">
+        <label class="form-label">🏆 Critério de Pontuação</label>
+        <div id="modal-prova-rule" style="font-size: 14px; font-weight: 700; color: var(--color-ink-primary); background: var(--color-accent-yellow-light); padding: 10px 14px; border-radius: 12px; border: var(--border-thin);"></div>
+      </div>
+
+      <!-- Dicas Estratégicas -->
+      <div class="form-group">
+        <label class="form-label">💡 Dicas da Liderança</label>
+        <ul id="modal-prova-tips" style="padding-left: 20px; font-size: 13px; line-height: 1.5; color: var(--color-ink-muted);"></ul>
+      </div>
+
+      <!-- Placar da Prova -->
+      <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+        <div style="flex: 1; padding: 10px; background: var(--color-accent-yellow-light); border: var(--border-thin); border-radius: 12px; text-align: center;">
+          <span id="modal-pts-a" style="font-weight: 800; font-size: 13px;">Time Sol: 0 pts</span>
+        </div>
+        <div style="flex: 1; padding: 10px; background: var(--color-accent-coral-light); border: var(--border-thin); border-radius: 12px; text-align: center;">
+          <span id="modal-pts-b" style="font-weight: 800; font-size: 13px;">Time Nascente: 0 pts</span>
+        </div>
+      </div>
+
+      <!-- Botão para Líderes Pontuarem -->
+      <button id="btn-modal-score-prova" class="btn-tactile primary" style="display: none;" onclick="closeModals(); openScoreModal(currentDetailProvaId)">
+        ⚡ Registrar Pontos Nesta Prova
+      </button>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       MODAL 2: LANÇAR PONTUAÇÃO (ADMIN)
+       ==================================================== -->
+  <div id="modal-score" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">⚡ Lançar Pontos</h2>
+        <button class="modal-close-btn" onclick="closeModals()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Equipe Vencedora / Pontuada</label>
+        <select id="score-team-select" class="form-select"></select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Prova Relacionada</label>
+        <select id="score-prova-select" class="form-select"></select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Quantidade de Pontos</label>
+        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+          <button type="button" class="btn-tactile small secondary" onclick="document.getElementById('score-points-input').value = 1">+1 pt</button>
+          <button type="button" class="btn-tactile small secondary" onclick="document.getElementById('score-points-input').value = 5">+5 pts</button>
+          <button type="button" class="btn-tactile small secondary" onclick="document.getElementById('score-points-input').value = 10">+10 pts</button>
+        </div>
+        <input id="score-points-input" class="form-input tabular" type="number" value="1" min="1">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Observação / Motivo (Opcional)</label>
+        <input id="score-reason-input" class="form-input" type="text" placeholder="Ex: 14 membros no 2x2m / Balde mais cheio">
+      </div>
+
+      <button class="btn-tactile primary" onclick="submitScore()">
+        Confirmar Pontuação
+      </button>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       MODAL 3: SENHA / PIN DO MODO ORGANIZADOR
+       ==================================================== -->
+  <div id="modal-admin-pin" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">🔐 Acesso da Liderança</h2>
+        <button class="modal-close-btn" onclick="closeModals()">✕</button>
+      </div>
+
+      <p style="font-size: 13px; color: var(--color-ink-muted); margin-bottom: 14px;">
+        Digite o PIN de organizador para gerenciar pontuações, provas, equipes e sons (Padrão: <b>1234</b>).
+      </p>
+
+      <div class="form-group">
+        <label class="form-label">PIN de Segurança</label>
+        <input id="admin-pin-input" class="form-input" type="password" maxlength="6" placeholder="Ex: 1234">
+      </div>
+
+      <button class="btn-tactile primary" onclick="verifyAdminPin()">
+        Desbloquear Painel
+      </button>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       MODAL 4: ADICIONAR NOVO INSCRITO
+       ==================================================== -->
+  <div id="modal-new-participant" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">👥 Novo Inscrito na Confra</h2>
+        <button class="modal-close-btn" onclick="closeModals()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nome Completo</label>
+        <input id="new-participant-name" class="form-input" type="text" placeholder="Nome do jovem">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contato / WhatsApp</label>
+        <input id="new-participant-phone" class="form-input" type="tel" placeholder="(79) 9...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Preferência de Alimentação</label>
+        <input id="new-participant-diet" class="form-input" type="text" placeholder="Ex: Frango + Macarrão + Tropeiro">
+      </div>
+
+      <button class="btn-tactile primary" onclick="submitNewParticipant()">
+        Salvar Inscrito
+      </button>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       MODAL 5: CRIAR NOVA PROVA (ADMIN)
+       ==================================================== -->
+  <div id="modal-new-prova" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">⭐ Nova Prova da Gincana</h2>
+        <button class="modal-close-btn" onclick="closeModals()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nome da Prova</label>
+        <input id="new-prova-title" class="form-input" type="text" placeholder="Ex: Corrida do Saco Gigante">
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <div class="form-group" style="flex: 1;">
+          <label class="form-label">Categoria</label>
+          <input id="new-prova-category" class="form-input" type="text" placeholder="Ex: Agilidade">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label class="form-label">Duração</label>
+          <input id="new-prova-duration" class="form-input" type="text" placeholder="Ex: 5 min">
+        </div>
+        <div class="form-group" style="width: 70px;">
+          <label class="form-label">Ícone</label>
+          <input id="new-prova-icon" class="form-input" type="text" value="🎯">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Regra de Pontuação</label>
+        <input id="new-prova-rule" class="form-input" type="text" placeholder="Ex: 3 pontos para quem chegar primeiro">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Descrição das Regras</label>
+        <textarea id="new-prova-desc" class="form-textarea" rows="3" placeholder="Explique como a prova funciona passo a passo..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Dicas (Uma por linha)</label>
+        <textarea id="new-prova-tips" class="form-textarea" rows="2" placeholder="Dica 1&#10;Dica 2"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Link de Vídeo (YouTube Embed Opcional)</label>
+        <input id="new-prova-video" class="form-input" type="url" placeholder="https://www.youtube.com/embed/...">
+      </div>
+
+      <button class="btn-tactile primary" onclick="submitNewProva()">
+        Publicar Prova
+      </button>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       MODAL 6: EDITAR NOMES DAS EQUIPES (ADMIN)
+       ==================================================== -->
+  <div id="modal-edit-teams" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">✏️ Editar Equipes</h2>
+        <button class="modal-close-btn" onclick="closeModals()">✕</button>
+      </div>
+
+      <div style="background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; padding: 12px; margin-bottom: 14px;">
+        <span class="micro-label" style="color: #B45309;">Equipe 1</span>
+        <div style="display: flex; gap: 8px; margin-top: 6px;">
+          <div style="width: 60px;">
+            <label class="form-label" style="font-size: 11px;">Ícone</label>
+            <input id="edit-team-a-crest" class="form-input" style="text-align: center; font-size: 18px;" type="text" value="☀️" maxlength="4">
+          </div>
+          <div style="flex: 1;">
+            <label class="form-label" style="font-size: 11px;">Nome da Equipe</label>
+            <input id="edit-team-a-name" class="form-input" type="text" placeholder="Ex: Time Sol">
+          </div>
+        </div>
+      </div>
+
+      <div style="background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; padding: 12px; margin-bottom: 16px;">
+        <span class="micro-label" style="color: var(--color-accent-coral-dark);">Equipe 2</span>
+        <div style="display: flex; gap: 8px; margin-top: 6px;">
+          <div style="width: 60px;">
+            <label class="form-label" style="font-size: 11px;">Ícone</label>
+            <input id="edit-team-b-crest" class="form-input" style="text-align: center; font-size: 18px;" type="text" value="🔥" maxlength="4">
+          </div>
+          <div style="flex: 1;">
+            <label class="form-label" style="font-size: 11px;">Nome da Equipe</label>
+            <input id="edit-team-b-name" class="form-input" type="text" placeholder="Ex: Time Nascente">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-tactile primary" onclick="submitEditTeams()">
+        Salvar Alterações
+      </button>
+    </div>
+  </div>
+
+  <!-- ====================================================
+       MODAL 7: PERFIL DO PARTICIPANTE CONECTADO
+       ==================================================== -->
+  <div id="modal-profile-participant" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">👤 Meu Perfil</h2>
+        <button class="modal-close-btn" onclick="closeModals()">✕</button>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div id="profile-modal-avatar" style="width: 76px; height: 76px; border-radius: 50%; border: var(--border-solid); background: var(--color-accent-yellow); display: inline-flex; align-items: center; justify-content: center; font-size: 34px; box-shadow: var(--shadow-tactile-md); margin-bottom: 12px;">
+          ☀️
+        </div>
+        <h3 id="profile-modal-name" class="font-display" style="font-size: 22px; font-weight: 800; color: var(--color-ink-primary);">Nome do Jovem</h3>
+        <div id="profile-modal-team" style="display: inline-block; margin-top: 8px; padding: 5px 16px; border-radius: var(--radius-pill); border: var(--border-thin); font-size: 13px; font-weight: 800; background: var(--color-accent-yellow-light);">
+          Time Sol
+        </div>
+      </div>
+
+      <div style="margin-top: 24px;">
+        <button class="btn-tactile secondary" style="color: #991B1B; border-color: #991B1B; background: #FEE2E2;" onclick="logoutParticipant()">
+          🚪 Sair / Trocar de Participante
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT PRINCIPAL -->
+  <script src="./app.js"></script>
+
+  <script>
+    // Gerenciador de Abas Principais (Segmented Control & Bottom Nav)
+    function switchMainTab(tabName) {
+      document.querySelectorAll('.tab-view-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.segment-tab').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const viewEl = document.getElementById(`view-${tabName}`);
+      if (viewEl) viewEl.style.display = 'block';
+
+      const segEl = document.getElementById(`tab-btn-${tabName}`);
+      if (segEl) segEl.classList.add('active');
+
+      const navEl = document.getElementById(`nav-btn-${tabName}`);
+      if (navEl) navEl.classList.add('active');
+
+      state.activeTab = tabName;
+
+      // Renderiza os Instants se for a tela de instants
+      if (tabName === 'instants') {
+        const fullGrid = document.getElementById('instants-grid-full');
+        if (fullGrid && (!fullGrid.children || fullGrid.children.length === 0)) {
+          fullGrid.innerHTML = INSTANTS_LIST.map(item => `
+            <div class="instant-card" onclick="triggerInstant('${item.sound}')" title="Tocar ${item.name}">
+              <div class="instant-button-outer">
+                <div class="instant-dome ${item.color}"></div>
+              </div>
+              <span class="instant-label">${item.name}</span>
+              <div class="instant-actions-mini">
+                <span class="instant-mini-btn">❤️</span>
+                <span class="instant-mini-btn">🔊</span>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Atualiza mostrador do telão ao entrar na aba telão
+      if (tabName === 'telao' && typeof telaoCtrl !== 'undefined') {
+        telaoCtrl.updateDisplay();
+      }
+    }
+
+    function toggleTimer() {
+      if (gameTimer.isRunning) {
+        gameTimer.pause();
+      } else {
+        gameTimer.start();
+      }
+    }
+  </script>
+</body>
+</html>

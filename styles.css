@@ -1,0 +1,1332 @@
+/* =========================================================
+   CONFRA JBSN — DESIGN SYSTEM STYLES (TACTILE NEO-POP)
+   Baseado no manifesto design_system.md e referências Pomegranate
+   ========================================================= */
+
+:root {
+  /* Cores Base Mandatórias */
+  --color-bg-base: #FFF9EE;
+  --color-ink-primary: #3A001D;
+  --color-ink-muted: rgba(58, 0, 29, 0.68);
+  --color-ink-subtle: rgba(58, 0, 29, 0.35);
+
+  /* Superfícies */
+  --color-surface-pure: #FFFFFF;
+  --color-surface-warm: #FFF5E4;
+  --color-surface-muted: #F3EBDB;
+
+  /* Acentos de Personalidade */
+  --color-accent-coral: #FF6F89;
+  --color-accent-coral-dark: #E24866;
+  --color-accent-coral-light: #FFE2E7;
+  --color-accent-yellow: #FECB66;
+  --color-accent-yellow-dark: #E2AD3D;
+  --color-accent-yellow-light: #FFF0CE;
+  --color-accent-mint: #79D3A8;
+  --color-accent-mint-light: #E0F7ED;
+  --color-accent-sky: #8EC5FC;
+  --color-accent-sky-light: #E4F1FE;
+  --color-accent-lilac: #D8B4E2;
+  --color-accent-lilac-light: #F4E8F8;
+  --color-accent-peach: #FFB694;
+
+  /* Geometria e Contornos */
+  --border-solid: 2px solid var(--color-ink-primary);
+  --border-thin: 1.5px solid var(--color-ink-primary);
+  --radius-bento: 24px;
+  --radius-card: 20px;
+  --radius-pill: 9999px;
+
+  /* Sombras Táteis Neo-Brutais */
+  --shadow-tactile-lg: 0 5px 0 0 var(--color-ink-primary);
+  --shadow-tactile-md: 0 4px 0 0 var(--color-ink-primary);
+  --shadow-tactile-sm: 0 2px 0 0 var(--color-ink-primary);
+
+  /* Safe Areas para PWA Mobile */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+
+  /* Física de Animação Tátil */
+  --ease-tactile: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Reset Geral */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--color-bg-base);
+  color: var(--color-ink-primary);
+  font-family: 'Noto Sans', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  overscroll-behavior-y: contain;
+  -webkit-font-smoothing: antialiased;
+  padding-top: var(--sat);
+  padding-bottom: calc(var(--sab) + 88px);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.font-display {
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+/* Micro Labels */
+.micro-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* Container Mobile-First */
+.mobile-screen {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 14px 18px 24px 18px;
+}
+
+/* =========================================================
+   HEADER DA APLICAÇÃO
+   ========================================================= */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 16px 0;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-seed {
+  width: 28px;
+  height: 28px;
+  background-color: var(--color-ink-primary);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: inline-block;
+  box-shadow: 0 2px 0 0 rgba(58, 0, 29, 0.25);
+  position: relative;
+}
+
+.brand-seed::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-accent-yellow);
+}
+
+.brand-title-group h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--color-ink-primary);
+}
+
+.brand-title-group span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-muted);
+  text-transform: uppercase;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--color-surface-pure);
+  border: var(--border-solid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink-primary);
+  box-shadow: var(--shadow-tactile-sm);
+  cursor: pointer;
+  transition: transform 0.1s var(--ease-tactile), box-shadow 0.1s;
+}
+
+.header-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 0 var(--color-ink-primary);
+}
+
+.header-btn.admin-unlocked {
+  background: var(--color-accent-mint);
+  border-color: var(--color-ink-primary);
+}
+
+/* =========================================================
+   STATUS / ADMIN BANNER
+   ========================================================= */
+.admin-badge-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-accent-yellow-light);
+  border: var(--border-solid);
+  border-radius: 14px;
+  padding: 8px 14px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-tactile-sm);
+}
+
+.admin-badge-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-badge-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2E7D32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.25);
+  animation: pulse-dot 1.8s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* =========================================================
+   HERO SCOREBOARD (PLACAR PRINCIPAL BENTO)
+   ========================================================= */
+.scoreboard-hero {
+  background: var(--color-surface-pure);
+  border: var(--border-solid);
+  border-radius: var(--radius-bento);
+  box-shadow: var(--shadow-tactile-md);
+  padding: 18px 16px 14px 16px;
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.scoreboard-teams-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.team-score-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 8px 6px;
+  border-radius: 18px;
+  transition: transform 0.2s;
+}
+
+.team-crest {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: var(--border-solid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-tactile-sm);
+  background: #FFF;
+}
+
+.team-name {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.team-pts-giant {
+  font-family: 'Fraunces', serif;
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-ink-primary);
+  margin-top: 2px;
+}
+
+.team-pts-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.vs-badge-center {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-surface-tint);
+  border: var(--border-solid);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--color-ink-primary);
+  box-shadow: var(--shadow-tactile-sm);
+  z-index: 2;
+  margin: 0 4px;
+}
+
+/* Placar Bar / Disputa Gauge */
+.clash-bar-wrapper {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: var(--border-thin);
+}
+
+.clash-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.clash-bar-track {
+  height: 16px;
+  background: var(--color-surface-muted);
+  border: var(--border-solid);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  display: flex;
+  position: relative;
+}
+
+.clash-bar-fill-a {
+  height: 100%;
+  background: var(--color-accent-yellow);
+  transition: width 0.4s var(--ease-tactile);
+  border-right: var(--border-thin);
+}
+
+.clash-bar-fill-b {
+  height: 100%;
+  background: var(--color-accent-coral);
+  transition: width 0.4s var(--ease-tactile);
+}
+
+/* =========================================================
+   SEGMENTED CONTROLS (TABS EM PÍLULA)
+   ========================================================= */
+.segmented-control {
+  display: flex;
+  background: var(--color-surface-tint);
+  border: var(--border-solid);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-tactile-sm);
+}
+
+.segment-tab {
+  flex: 1;
+  text-align: center;
+  padding: 9px 4px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  color: var(--color-ink-muted);
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s var(--ease-tactile);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.segment-tab.active {
+  background: var(--color-surface-pure);
+  color: var(--color-ink-primary);
+  border: var(--border-solid);
+  box-shadow: 0 2px 0 0 var(--color-ink-primary);
+}
+
+/* =========================================================
+   BENTO CARDS & LISTAS
+   ========================================================= */
+.bento-card {
+  background: var(--color-surface-pure);
+  border: var(--border-solid);
+  border-radius: var(--radius-bento);
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-tactile-md);
+  overflow: hidden;
+  transition: transform 0.15s var(--ease-tactile);
+}
+
+.card-header-tint {
+  padding: 12px 18px;
+  border-bottom: var(--border-solid);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-body {
+  padding: 18px;
+}
+
+/* Prova Item Card */
+.prova-card {
+  background: var(--color-surface-pure);
+  border: var(--border-solid);
+  border-radius: var(--radius-card);
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-tactile-sm);
+  cursor: pointer;
+  transition: transform 0.15s var(--ease-tactile), box-shadow 0.15s;
+  overflow: hidden;
+}
+
+.prova-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-tactile-md);
+}
+
+.prova-card:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 var(--color-ink-primary);
+}
+
+.prova-card-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: var(--border-thin);
+}
+
+.prova-card-body {
+  padding: 14px 16px;
+}
+
+.prova-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.prova-desc-preview {
+  font-size: 13px;
+  color: var(--color-ink-muted);
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.prova-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(58, 0, 29, 0.2);
+}
+
+.tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: var(--border-thin);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   BOTÕES TÁTEIS (NEO-BRUTALIST COM FÍSICA)
+   ========================================================= */
+.btn-tactile {
+  width: 100%;
+  border: var(--border-solid);
+  border-radius: var(--radius-pill);
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: var(--shadow-tactile-md);
+  transition: transform 0.12s var(--ease-tactile), box-shadow 0.12s var(--ease-tactile);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+}
+
+.btn-tactile:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--color-ink-primary);
+}
+
+.btn-tactile.primary {
+  background: var(--color-accent-yellow);
+  color: var(--color-ink-primary);
+}
+
+.btn-tactile.coral {
+  background: var(--color-accent-coral);
+  color: #FFF;
+}
+
+.btn-tactile.secondary {
+  background: var(--color-surface-pure);
+  color: var(--color-ink-primary);
+}
+
+.btn-tactile.mint {
+  background: var(--color-accent-mint);
+  color: var(--color-ink-primary);
+}
+
+.btn-tactile.small {
+  width: auto;
+  max-width: max-content;
+  white-space: nowrap;
+  padding: 7px 14px;
+  font-size: 13px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-tactile-sm);
+}
+
+.btn-back,
+.btn-tactile.btn-back,
+.btn-tactile.small.btn-back {
+  width: auto !important;
+  max-width: max-content !important;
+  display: inline-flex !important;
+  padding: 6px 14px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  border-radius: var(--radius-pill) !important;
+  box-shadow: var(--shadow-tactile-sm) !important;
+}
+
+.btn-tactile.small:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 0 var(--color-ink-primary);
+}
+
+/* =========================================================
+   ROSTER DE PARTICIPANTES / INSCRITOS
+   ========================================================= */
+.search-input-wrapper {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  border-radius: var(--radius-pill);
+  border: var(--border-solid);
+  background: var(--color-surface-pure);
+  font-size: 14px;
+  color: var(--color-ink-primary);
+  font-family: inherit;
+  box-shadow: var(--shadow-tactile-sm);
+  outline: none;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-ink-muted);
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--color-surface-pure);
+  border: var(--border-solid);
+  border-radius: 16px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-tactile-sm);
+}
+
+.participant-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.participant-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: var(--border-solid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.participant-details {
+  min-width: 0;
+}
+
+.participant-name {
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-ink-primary);
+}
+
+.participant-sub {
+  font-size: 11px;
+  color: var(--color-ink-muted);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.participant-team-select {
+  padding: 6px 10px;
+  border: var(--border-solid);
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--color-surface-warm);
+  color: var(--color-ink-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+/* =========================================================
+   CRONÔMETRO / TIMER DE PROVAS
+   ========================================================= */
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.timer-circle-wrap {
+  width: 230px;
+  height: 230px;
+  border-radius: 50%;
+  background: var(--color-surface-pure);
+  border: 4px solid var(--color-ink-primary);
+  box-shadow: var(--shadow-tactile-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.timer-digits {
+  font-family: 'Fraunces', serif;
+  font-size: 58px;
+  font-weight: 800;
+  color: var(--color-ink-primary);
+  line-height: 1;
+}
+
+.timer-sublabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.timer-presets {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.preset-chip {
+  padding: 6px 14px;
+  background: var(--color-surface-tint);
+  border: var(--border-thin);
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.preset-chip:hover, .preset-chip.active {
+  background: var(--color-accent-yellow);
+  box-shadow: 0 2px 0 0 var(--color-ink-primary);
+}
+
+.timer-controls-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 340px;
+}
+
+/* =========================================================
+   HISTÓRICO DE PONTOS / FEED RECENTE
+   ========================================================= */
+.log-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--color-surface-warm);
+  border: var(--border-thin);
+  border-radius: 14px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.log-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.log-pts-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-weight: 800;
+  font-size: 12px;
+  border: 1px solid var(--color-ink-primary);
+}
+
+/* =========================================================
+   BOTTOM NAVIGATION BAR FIXA PWA
+   ========================================================= */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--color-surface-pure);
+  border-top: var(--border-solid);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 12px calc(8px + var(--sab)) 12px;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  flex: 1;
+  padding: 4px 0;
+  color: var(--color-ink-muted);
+  transition: transform 0.1s var(--ease-tactile);
+}
+
+.nav-item:active {
+  transform: scale(0.92);
+}
+
+.nav-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease-tactile);
+}
+
+.nav-item.active {
+  color: var(--color-ink-primary);
+}
+
+.nav-item.active .nav-icon-wrapper {
+  background: var(--color-accent-yellow);
+  border: var(--border-solid);
+  box-shadow: 0 2px 0 0 var(--color-ink-primary);
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================
+   MODAIS (SLIDE UP BOTTOM SHEET OU CENTRO)
+   ========================================================= */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(58, 0, 29, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-sheet {
+  background: var(--color-bg-base);
+  border: var(--border-solid);
+  border-bottom: none;
+  border-radius: 32px 32px 0 0;
+  width: 100%;
+  max-width: 480px;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: 0 -8px 0 0 var(--color-ink-primary);
+  transform: translateY(100%);
+  transition: transform 0.25s var(--ease-tactile);
+  padding: 20px 20px calc(24px + var(--sab)) 20px;
+}
+
+.modal-backdrop.open .modal-sheet {
+  transform: translateY(0);
+}
+
+.modal-handle {
+  width: 44px;
+  height: 5px;
+  background: var(--color-ink-primary);
+  border-radius: 10px;
+  margin: 0 auto 16px auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal-close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: var(--border-solid);
+  background: var(--color-surface-pure);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-tactile-sm);
+}
+
+/* Formulários táteis */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: var(--border-solid);
+  border-radius: 14px;
+  background: var(--color-surface-pure);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-ink-primary);
+  outline: none;
+  box-shadow: var(--shadow-tactile-sm);
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--color-ink-primary);
+  box-shadow: 0 0 0 3px rgba(254, 203, 102, 0.6);
+}
+
+/* =========================================================
+   MODO TELÃO / PROJETOR (FULLSCREEN)
+   ========================================================= */
+.telao-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #FFF9EE;
+  z-index: 500;
+  display: none;
+  flex-direction: column;
+  padding: 30px 40px;
+  overflow: hidden;
+}
+
+.telao-overlay.active {
+  display: flex;
+}
+
+.telao-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 4px solid var(--color-ink-primary);
+  padding-bottom: 20px;
+}
+
+.telao-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+}
+
+.telao-team-card {
+  flex: 1;
+  max-width: 500px;
+  height: 480px;
+  background: #FFF;
+  border: 5px solid var(--color-ink-primary);
+  border-radius: 40px;
+  box-shadow: 0 14px 0 0 var(--color-ink-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.telao-score-giant {
+  font-family: 'Fraunces', serif;
+  font-size: 140px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-ink-primary);
+}
+
+/* =========================================================
+   MYINSTANTS — MESA DE EFEITOS SONOROS (ARCADE BUTTONS)
+   Referência visual exata de references/instants.png
+   ========================================================= */
+.instants-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 10px;
+  padding: 10px 4px;
+  justify-items: center;
+}
+
+.instant-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Base circular externa / bisel do botão arcade */
+.instant-button-outer {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #F3EBDB;
+  border: 2.5px solid var(--color-ink-primary);
+  box-shadow: 0 5px 0 0 var(--color-ink-primary), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s var(--ease-tactile), box-shadow 0.1s;
+  position: relative;
+}
+
+.instant-button-outer:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--color-ink-primary);
+}
+
+/* Domo 3D brilhante interno com reflexo especular */
+.instant-dome {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 -5px 7px rgba(0, 0, 0, 0.4), inset 0 5px 7px rgba(255, 255, 255, 0.7);
+  transition: all 0.1s;
+}
+
+.instant-button-outer:active .instant-dome {
+  transform: scale(0.93);
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* Reflexo especular no topo do domo */
+.instant-dome::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 12px;
+  width: 34px;
+  height: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Variações de Cores estilo MyInstants (como em instants.png) */
+.instant-dome.green {
+  background: radial-gradient(circle at 40% 35%, #86efac 0%, #22c55e 60%, #15803d 100%);
+}
+.instant-dome.red {
+  background: radial-gradient(circle at 40% 35%, #fca5a5 0%, #ef4444 60%, #b91c1c 100%);
+}
+.instant-dome.yellow {
+  background: radial-gradient(circle at 40% 35%, #fef08a 0%, #eab308 60%, #a16207 100%);
+}
+.instant-dome.blue {
+  background: radial-gradient(circle at 40% 35%, #93c5fd 0%, #3b82f6 60%, #1d4ed8 100%);
+}
+.instant-dome.cyan {
+  background: radial-gradient(circle at 40% 35%, #67e8f9 0%, #06b6d4 60%, #0e7490 100%);
+}
+.instant-dome.purple {
+  background: radial-gradient(circle at 40% 35%, #d8b4fe 0%, #a855f7 60%, #7e22ce 100%);
+}
+.instant-dome.orange {
+  background: radial-gradient(circle at 40% 35%, #fdba74 0%, #f97316 60%, #c2410c 100%);
+}
+.instant-dome.pink {
+  background: radial-gradient(circle at 40% 35%, #f472b6 0%, #db2777 60%, #9d174d 100%);
+}
+
+.instant-label {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e3a8a;
+  line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-color: #1e3a8a;
+  text-underline-offset: 3px;
+  max-width: 95px;
+  word-break: break-word;
+  text-align: center;
+}
+
+.instant-actions-mini {
+  display: none !important;
+}
+
+.instant-mini-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--color-ink-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  background: var(--color-surface-pure);
+  box-shadow: 0 1px 0 var(--color-ink-primary);
+}
+
+/* Responsividade desktop / tablet */
+@media (min-width: 600px) {
+  body {
+    background-color: #F3EBDB;
+    padding-top: 20px;
+  }
+  .mobile-screen {
+    border: var(--border-solid);
+    border-radius: 36px;
+    box-shadow: 0 12px 0 0 var(--color-ink-primary);
+    background: var(--color-bg-base);
+    min-height: calc(100vh - 40px);
+    overflow: hidden;
+  }
+}
+
+/* =========================================================
+   GATEWAY / ONBOARDING ENTRADA (VISÃO DO APP)
+   ========================================================= */
+.gateway-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--color-bg-base);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.gateway-slider {
+  display: flex;
+  width: 300%;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.gateway-pane {
+  width: 33.333333%;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: calc(20px + var(--sat)) 20px calc(24px + var(--sab)) 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.gateway-box {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.gateway-header-brand {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.gateway-role-label {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.btn-gateway-role {
+  background: var(--color-surface-pure);
+  border: var(--border-solid);
+  border-radius: var(--radius-bento);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  box-shadow: var(--shadow-tactile-md);
+  transition: transform 0.12s var(--ease-tactile), box-shadow 0.12s;
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-gateway-role:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-tactile-lg);
+}
+
+.btn-gateway-role:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--color-ink-primary);
+}
+
+.gateway-role-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: var(--border-solid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-tactile-sm);
+}
+
+.gateway-role-info {
+  flex: 1;
+}
+
+.gateway-role-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-ink-primary);
+  line-height: 1.2;
+}
+
+.gateway-role-desc {
+  font-size: 12px;
+  color: var(--color-ink-muted);
+  margin-top: 2px;
+}
+
+/* Header Profile Pill */
+.btn-profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--color-surface-pure);
+  border: var(--border-solid);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-tactile-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-ink-primary);
+  transition: transform 0.1s var(--ease-tactile);
+}
+
+.btn-profile-pill:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+/* Card de Seleção do Participante (Entry Gate) */
+.participant-entry-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--color-surface-pure);
+  border: var(--border-solid);
+  border-radius: 18px;
+  box-shadow: var(--shadow-tactile-sm);
+  cursor: pointer;
+  transition: transform 0.1s var(--ease-tactile), box-shadow 0.1s;
+  user-select: none;
+}
+
+.participant-entry-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-tactile-md);
+}
+
+.participant-entry-card:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.entry-enter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: var(--border-solid);
+  background: var(--color-accent-yellow);
+  color: var(--color-ink-primary);
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 2px 0 0 var(--color-ink-primary);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Ocultar barra de rolagem (Scrollbar invisível em qualquer navegador) */
+.no-scrollbar::-webkit-scrollbar,
+#entry-participants-list::-webkit-scrollbar,
+.gateway-pane::-webkit-scrollbar,
+.gateway-overlay::-webkit-scrollbar,
+.gateway-box::-webkit-scrollbar,
+.modal-sheet::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar,
+#entry-participants-list,
+.gateway-pane,
+.gateway-overlay,
+.gateway-box,
+.modal-sheet,
+body {
+  -ms-overflow-style: none !important; /* IE e Edge */
+  scrollbar-width: none !important;    /* Firefox */
+}
+
