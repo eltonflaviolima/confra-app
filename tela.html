@@ -425,52 +425,46 @@
       box-shadow: 0 1px 0 0 var(--color-ink);
     }
 
-    /* TRANSIÇÃO SUAVE DE ESMAECIMENTO DO PLACAR PARA APRESENTAÇÃO */
-    .arena-container {
-      transition: opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1), transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-    }
-    .arena-container.presentation-hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.96);
-    }
-    .clash-section {
-      transition: opacity 0.5s ease;
-    }
-    .clash-section.presentation-hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* PALCO CINEMATOGRÁFICO DE APRESENTAÇÃO DE PROVA NO TELÃO */
+    /* PALCO CINEMATOGRÁFICO DE APRESENTAÇÃO DE PROVA NO TELÃO (SUBSTITUI TOTALMENTE O PLACAR SEM SCROLL) */
     .telao-prova-stage {
       flex: 1;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      margin: 0;
+      padding: 10px 20px 20px 20px;
+      box-sizing: border-box;
       position: relative;
-      width: 100%;
-      min-height: 520px;
-      margin-bottom: 24px;
-      z-index: 100;
-      transition: opacity 0.5s ease;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .prova-stage-actions {
+      position: absolute;
+      top: 10px;
+      right: 24px;
+      z-index: 105;
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
 
     .prova-stage-container {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1050px;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
+      margin-top: 6px;
     }
 
     /* Wrap do Título: começa no centro da tela ocupando 80% */
     .prova-stage-title-wrap {
       width: 80%;
-      max-width: 80%;
-      margin: 0 auto;
+      max-width: 850px;
+      margin: 50px auto 0 auto;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -479,11 +473,11 @@
       background: #FFFFFF;
       border: 4px solid var(--color-ink);
       border-radius: 36px;
-      box-shadow: 0 16px 0 0 var(--color-ink), 0 20px 30px rgba(58, 0, 29, 0.15);
-      padding: 36px 28px;
+      box-shadow: 0 14px 0 0 var(--color-ink), 0 20px 30px rgba(58, 0, 29, 0.15);
+      padding: 28px 24px;
       transform: scale(0.6) translateY(20px);
       opacity: 0;
-      transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     /* Quando surge com destaque no meio */
@@ -495,74 +489,76 @@
     /* Quando diminui para tamanho médio e sobe para o topo */
     .prova-stage-title-wrap.docked-top {
       opacity: 1;
-      width: 90%;
-      max-width: 90%;
-      padding: 14px 28px;
-      border-radius: 24px;
-      border-width: 3.5px;
-      box-shadow: 0 8px 0 0 var(--color-ink);
+      width: 96%;
+      max-width: 1000px;
+      margin: 0 auto 12px auto;
+      padding: 8px 20px;
+      border-radius: 20px;
+      border-width: 3px;
+      box-shadow: 0 6px 0 0 var(--color-ink);
       flex-direction: row;
       justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 20px;
+      align-items: center;
+      gap: 14px;
     }
 
     .prova-stage-icon {
-      font-size: 72px;
+      font-size: 64px;
       line-height: 1;
-      margin-bottom: 12px;
-      transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+      margin-bottom: 8px;
+      transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
     }
     .prova-stage-title-wrap.docked-top .prova-stage-icon {
-      font-size: 40px;
+      font-size: 32px;
       margin-bottom: 0;
     }
 
     .prova-stage-title {
       font-family: 'Fraunces', serif;
-      font-size: 64px;
+      font-size: 52px;
       font-weight: 900;
       color: var(--color-ink);
       line-height: 1.1;
       letter-spacing: -0.03em;
-      margin-bottom: 10px;
-      transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+      margin-bottom: 8px;
+      transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
     }
     .prova-stage-title-wrap.docked-top .prova-stage-title {
-      font-size: 34px;
+      font-size: 26px;
       margin-bottom: 0;
       text-align: left;
       flex: 1;
     }
 
     .prova-stage-category {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 800;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: #FFF;
       background: var(--color-ink);
-      padding: 6px 16px;
+      padding: 5px 14px;
       border-radius: 9999px;
-      transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
     }
     .prova-stage-title-wrap.docked-top .prova-stage-category {
-      font-size: 13px;
-      padding: 4px 14px;
+      font-size: 11px;
+      padding: 3px 10px;
     }
 
     /* Card de Regras & Como Funciona */
     .prova-stage-rules-card {
-      width: 90%;
-      max-width: 90%;
+      width: 96%;
+      max-width: 1000px;
       background: #FFFFFF;
       border: 3.5px solid var(--color-ink);
-      border-radius: 32px;
-      box-shadow: 0 12px 0 0 var(--color-ink);
-      padding: 24px 28px;
+      border-radius: 28px;
+      box-shadow: 0 10px 0 0 var(--color-ink);
+      padding: 16px 22px;
       opacity: 0;
-      transform: translateY(60px);
-      transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+      transform: translateY(50px);
+      transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+      box-sizing: border-box;
     }
 
     .prova-stage-rules-card.enter-rules {
@@ -572,92 +568,94 @@
 
     .prova-stage-rules-card.exit-rules {
       opacity: 0;
-      transform: translateY(80px);
-      transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(60px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .rules-header-pill {
       display: inline-block;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       background: var(--color-yellow);
       border: 2px solid var(--color-ink);
-      padding: 6px 16px;
+      padding: 4px 12px;
       border-radius: 9999px;
       color: var(--color-ink);
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .rules-body-text {
-      font-size: 20px;
-      line-height: 1.55;
+      font-size: 15px;
+      line-height: 1.45;
       font-weight: 600;
       color: var(--color-ink);
       background: var(--color-bg);
       border: 2px solid var(--color-ink);
-      border-radius: 20px;
-      padding: 16px 20px;
-      margin-bottom: 18px;
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      max-height: 130px;
+      overflow-y: auto;
     }
 
     .rules-footer-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
     .rule-box {
       background: #FFF9EE;
       border: 2px solid var(--color-ink);
-      border-radius: 16px;
-      padding: 12px 16px;
+      border-radius: 14px;
+      padding: 8px 12px;
     }
 
     .rule-box-label {
       display: block;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: rgba(58, 0, 29, 0.7);
-      margin-bottom: 6px;
+      margin-bottom: 3px;
     }
 
     .rule-box-val {
-      font-size: 16px;
+      font-size: 13px;
       font-weight: 800;
       color: var(--color-ink);
     }
 
     .rule-box-tips {
       margin: 0;
-      padding-left: 18px;
-      font-size: 14px;
+      padding-left: 16px;
+      font-size: 12px;
       color: var(--color-ink);
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
     .rules-timer-bar-wrap {
       border-top: 2px dashed rgba(58, 0, 29, 0.25);
-      padding-top: 14px;
+      padding-top: 10px;
     }
 
     .rules-timer-info {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
       color: var(--color-ink);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .rules-timer-track {
       width: 100%;
-      height: 12px;
+      height: 10px;
       background: var(--color-bg);
       border: 2px solid var(--color-ink);
       border-radius: 9999px;
@@ -923,16 +921,17 @@
     <!-- Palco Central de Vídeo Dance (Abre no espaço do meio entre os dois placares) -->
     <div id="dance-stage-wrapper" class="dance-stage-wrapper">
       <video id="dance-video" class="dance-stage-video" playsinline preload="auto" src="./videos/cat_dog_dancing.mp4"></video>
+      <iframe id="dance-youtube-iframe" class="dance-stage-video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="display: none; border: 0; width: 100%; height: 100%;"></iframe>
       <button class="dance-stage-close" onclick="stopDanceVideo()" title="Fechar Dança">✕ Parar</button>
     </div>
 
     <!-- Time Nascente (Desliza suavemente para a direita) -->
     <div id="panel-team-b" class="team-panel team-b">
       <div class="leader-badge">👑 Na Liderança</div>
-      <div class="team-crest-large" style="background: var(--color-coral);">
-        <span id="crest-b">🔥</span>
+      <div class="team-crest-large" style="background: #8EC5FC;">
+        <span id="crest-b">🌊</span>
       </div>
-      <h2 id="name-b" class="team-name-large">Time Nascente</h2>
+      <h2 id="name-b" class="team-name-large">Time Mar</h2>
       <div id="score-b" class="team-score-giant tabular">0</div>
       <span class="team-sublabel">Pontos Conquistados</span>
     </div>
@@ -961,9 +960,16 @@
     </div>
   </section>
 
-  <!-- PALCO CINEMATOGRÁFICO DE APRESENTAÇÃO DE PROVAS -->
+  <!-- PALCO CINEMATOGRÁFICO DE APRESENTAÇÃO DE PROVAS (SUBSTITUI O PLACAR) -->
   <section id="telao-prova-stage" class="telao-prova-stage" style="display: none;">
-    <button class="btn-telao small" style="position: absolute; top: -10px; right: 24px; z-index: 101; font-size: 12px; padding: 6px 14px;" onclick="cancelProvaPresentation()">✕ Fechar / Voltar ao Placar</button>
+    <div class="prova-stage-actions">
+      <button id="btn-pause-prova-stage" class="btn-telao small" onclick="togglePauseProvaPresentation()" style="font-size: 12px; font-weight: 800; padding: 6px 14px; background: #FFFFFF; color: var(--color-ink); border-color: var(--color-ink);" title="Pausar contagem e manter regras fixadas">
+        ⏸️ Pausar Regras
+      </button>
+      <button class="btn-telao small" onclick="cancelProvaPresentation()" style="font-size: 12px; font-weight: 800; padding: 6px 14px; background: var(--color-coral); color: #FFF; border-color: var(--color-ink);" title="Voltar ao Placar">
+        ✕ Voltar ao Placar
+      </button>
+    </div>
     <div class="prova-stage-container">
       
       <!-- Cabeçalho / Título da Prova em Destaque -->
@@ -1013,7 +1019,7 @@
     </div>
     <div class="clash-bar-track">
       <div id="clash-fill-a" class="clash-bar-fill-a" style="width: 50%;"></div>
-      <div id="clash-fill-b" class="clash-bar-fill-b" style="width: 50%;"></div>
+      <div id="clash-fill-b" class="clash-bar-fill-b" style="width: 50%; background: #8EC5FC;"></div>
     </div>
   </section>
 
@@ -1090,7 +1096,7 @@
         if (action.sound) playAudio(action.sound);
         showCelebration(action.title || '⚡ ATENÇÃO GINCANA! ⚡');
       } else if (action.type === 'PLAY_VIDEO' || action.type === 'PLAY_DANCE') {
-        startDanceVideo(action.video, action.title);
+        startDanceVideo(action.video, action.title, action.videoType);
       } else if (action.type === 'STOP_VIDEO' || action.type === 'STOP_DANCE') {
         stopDanceVideo();
       } else if (action.type === 'TOGGLE_VIDEO' || action.type === 'TOGGLE_DANCE') {
@@ -1098,15 +1104,26 @@
         if (arena && arena.classList.contains('dance-active')) {
           stopDanceVideo();
         } else {
-          startDanceVideo(action.video, action.title);
+          startDanceVideo(action.video, action.title, action.videoType);
         }
       } else if (action.type === 'TELAO_SWITCH_VIEW') {
         if (action.view === 'placar') {
           hideTelaoTimer();
           stopDanceVideo();
+          cancelProvaPresentation();
         } else if (action.view === 'timer') {
           stopDanceVideo();
+          cancelProvaPresentation();
           showTelaoTimer(action.seconds !== undefined ? action.seconds : telaoTimerSeconds, false);
+        } else if (action.view === 'dance') {
+          hideTelaoTimer();
+          cancelProvaPresentation();
+          startDanceVideo();
+        } else if (action.view === 'sons') {
+          hideTelaoTimer();
+          cancelProvaPresentation();
+          stopDanceVideo();
+          showCelebration('🎛️ MESA DE SONS ATIVA');
         }
       } else if (action.type === 'TELAO_TIMER_START') {
         showTelaoTimer(action.seconds, true);
@@ -1141,7 +1158,18 @@
       document.getElementById('name-a').textContent = teamA.name;
       document.getElementById('name-b').textContent = teamB.name;
       document.getElementById('crest-a').textContent = teamA.crest || '☀️';
-      document.getElementById('crest-b').textContent = teamB.crest || '🔥';
+      document.getElementById('crest-b').textContent = teamB.crest || '🌊';
+
+      const colA = teamA.color || '#FECB66';
+      const colB = teamB.color || '#8EC5FC';
+      const crestElA = document.getElementById('crest-a');
+      const crestElB = document.getElementById('crest-b');
+      if (crestElA && crestElA.parentElement) crestElA.parentElement.style.background = colA;
+      if (crestElB && crestElB.parentElement) crestElB.parentElement.style.background = colB;
+      const fillElA = document.getElementById('clash-fill-a');
+      const fillElB = document.getElementById('clash-fill-b');
+      if (fillElA) fillElA.style.background = colA;
+      if (fillElB) fillElB.style.background = colB;
 
       const scoreAEl = document.getElementById('score-a');
       const scoreBEl = document.getElementById('score-b');
@@ -1325,21 +1353,23 @@
     let provaPresentationTimeout1 = null;
     let provaPresentationTimeout2 = null;
     let provaPresentationInterval = null;
+    let isPresentationPaused = false;
 
     function presentProvaOnTelao(prova) {
+      window.scrollTo(0, 0);
       if (!prova) return;
 
       // Cancela apresentação anterior caso esteja ativa
       cancelProvaPresentation();
 
-      // 1. Esmaece (saída) o placar, cronômetro ou vídeo da tela
+      // 1. Esmaece e OCULTA TOTALMENTE (display: none) o placar, cronômetro ou vídeo da tela
       stopDanceVideo();
       hideTelaoTimer();
 
       const arena = document.getElementById('arena-container');
       const clash = document.querySelector('.clash-section');
-      if (arena) arena.classList.add('presentation-hidden');
-      if (clash) clash.classList.add('presentation-hidden');
+      if (arena) arena.style.display = 'none';
+      if (clash) clash.style.display = 'none';
 
       // Preenche os dados da prova
       document.getElementById('prova-stage-icon').textContent = prova.icon || '🎯';
@@ -1369,6 +1399,15 @@
       rulesCard.className = 'prova-stage-rules-card';
       rulesCard.style.display = 'none';
 
+      // Reseta botão de pausar
+      isPresentationPaused = false;
+      const pauseBtn = document.getElementById('btn-pause-prova-stage');
+      if (pauseBtn) {
+        pauseBtn.innerHTML = '⏸️ Pausar Regras';
+        pauseBtn.style.background = '#FFFFFF';
+        pauseBtn.style.color = 'var(--color-ink)';
+      }
+
       stage.style.display = 'flex';
       stage.style.opacity = '1';
 
@@ -1379,7 +1418,7 @@
         playAudio('mario-luigi-victory.mp3');
       }, 100);
 
-      // 3. Após o impacto do título (3.5 segundos), o nome da prova diminui para tamanho médio e sobe
+      // 3. Após o impacto do título (3.2 segundos), o nome da prova diminui para tamanho médio e sobe
       provaPresentationTimeout1 = setTimeout(() => {
         titleWrap.classList.remove('enter-center');
         titleWrap.classList.add('docked-top');
@@ -1395,10 +1434,21 @@
           const countEl = document.getElementById('prova-stage-countdown-text');
           const fillEl = document.getElementById('prova-stage-timer-fill');
 
-          if (countEl) countEl.textContent = `${remainingSeconds}s`;
-          if (fillEl) fillEl.style.width = '100%';
+          if (countEl) {
+            countEl.textContent = `${remainingSeconds}s`;
+            countEl.style.color = '';
+          }
+          if (fillEl) {
+            fillEl.style.transition = 'width 1s linear';
+            fillEl.style.width = '100%';
+          }
 
           provaPresentationInterval = setInterval(() => {
+            if (isPresentationPaused) {
+              // Quando pausado, as regras são mantidas na tela até despausar ou clicar em voltar ao placar!
+              return;
+            }
+
             remainingSeconds--;
             if (countEl) countEl.textContent = `${remainingSeconds}s`;
             if (fillEl) fillEl.style.width = `${Math.max(0, (remainingSeconds / 30) * 100)}%`;
@@ -1415,15 +1465,49 @@
 
               provaPresentationTimeout2 = setTimeout(() => {
                 stage.style.display = 'none';
-                if (arena) arena.classList.remove('presentation-hidden');
-                if (clash) clash.classList.remove('presentation-hidden');
-              }, 800);
+                if (arena) arena.style.display = 'flex';
+                if (clash) clash.style.display = 'block';
+              }, 700);
             }
           }, 1000);
 
-        }, 600);
+        }, 500);
 
-      }, 3500);
+      }, 3200);
+    }
+
+    function togglePauseProvaPresentation() {
+      isPresentationPaused = !isPresentationPaused;
+      const btn = document.getElementById('btn-pause-prova-stage');
+      const countEl = document.getElementById('prova-stage-countdown-text');
+      const fillEl = document.getElementById('prova-stage-timer-fill');
+
+      if (isPresentationPaused) {
+        if (btn) {
+          btn.innerHTML = '▶️ Retomar Contagem';
+          btn.style.background = 'var(--color-yellow)';
+          btn.style.color = 'var(--color-ink)';
+        }
+        if (countEl) {
+          countEl.textContent = '⏸️ REGRAS FIXADAS';
+          countEl.style.color = 'var(--color-coral)';
+        }
+        if (fillEl) {
+          fillEl.style.transition = 'none';
+        }
+      } else {
+        if (btn) {
+          btn.innerHTML = '⏸️ Pausar Regras';
+          btn.style.background = '#FFFFFF';
+          btn.style.color = 'var(--color-ink)';
+        }
+        if (countEl) {
+          countEl.style.color = '';
+        }
+        if (fillEl) {
+          fillEl.style.transition = 'width 1s linear';
+        }
+      }
     }
 
     function cancelProvaPresentation() {
@@ -1433,13 +1517,14 @@
       provaPresentationTimeout1 = null;
       provaPresentationTimeout2 = null;
       provaPresentationInterval = null;
+      isPresentationPaused = false;
 
       const stage = document.getElementById('telao-prova-stage');
       const arena = document.getElementById('arena-container');
       const clash = document.querySelector('.clash-section');
       if (stage) stage.style.display = 'none';
-      if (arena) arena.classList.remove('presentation-hidden');
-      if (clash) clash.classList.remove('presentation-hidden');
+      if (arena) arena.style.display = 'flex';
+      if (clash) clash.style.display = 'block';
     }
 
     // Ação: Celebrar (toca celebration.mp3 e exibe banner)
@@ -1451,10 +1536,17 @@
     // Ação: Vídeo / Dance (Desloca placares para os lados e toca no centro com áudio na TV)
     let danceFadeTimeout = null;
 
-    function startDanceVideo(videoSrc, title) {
+    function extractYouTubeId(url) {
+      if (!url) return '';
+      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+      return match ? match[1] : '';
+    }
+
+    function startDanceVideo(videoSrc, title, videoType) {
       hideTelaoTimer(); // Garante que o timer feche e o placar/arena apareça
       const arena = document.getElementById('arena-container');
       const video = document.getElementById('dance-video');
+      const ytIframe = document.getElementById('dance-youtube-iframe');
       if (!arena || !video) return;
 
       arena.style.display = 'flex';
@@ -1463,14 +1555,8 @@
 
       if (danceFadeTimeout) clearTimeout(danceFadeTimeout);
 
-      const resolvedSrc = resolveVideoPath(videoSrc);
-      
-      video.pause();
-      video.currentTime = 0;
-      video.src = resolvedSrc;
-      try { video.load(); } catch(e) {}
-      video.muted = false;
-      video.volume = 1;
+      const ytId = extractYouTubeId(videoSrc);
+      const isYouTube = videoType === 'youtube' || Boolean(ytId);
 
       if (title) {
         showCelebration(`🎬 ${title}`);
@@ -1479,51 +1565,98 @@
       // 1. Move os placares lateralmente (esquerda e direita) abrindo espaço no centro
       arena.classList.add('dance-active');
 
-      // 2. Esmaecer para entrar (fade-in)
-      setTimeout(() => {
-        video.classList.add('fade-in');
-      }, 180);
+      if (isYouTube && ytId) {
+        // Pausa e oculta vídeo local
+        video.pause();
+        video.currentTime = 0;
+        video.style.display = 'none';
+        video.classList.remove('fade-in');
 
-      const p = video.play();
-      if (p !== undefined) {
-        p.catch(err => {
-          console.warn('Vídeo autoplay bloqueado pelo navegador:', err);
-          showUnlockBanner();
-          pendingVideoSrc = resolvedSrc;
-          // Fallback visual mudo se o navegador exigir interação
-          video.muted = true;
-          video.play().catch(() => {});
-        });
-      }
-
-      // 3. Esmaecimento suave de saída (fade-out) 2 segundos antes do clipe terminar
-      video.ontimeupdate = () => {
-        if (video.duration && video.currentTime >= video.duration - 2) {
-          video.classList.remove('fade-in');
+        // Configura e exibe o iframe do YouTube
+        if (ytIframe) {
+          ytIframe.style.display = 'block';
+          ytIframe.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&enablejsapi=1&rel=0&iv_load_policy=3&controls=0&modestbranding=1`;
+          setTimeout(() => {
+            ytIframe.classList.add('fade-in');
+          }, 180);
         }
-      };
+      } else {
+        // Oculta e limpa iframe do YouTube
+        if (ytIframe) {
+          ytIframe.src = 'about:blank';
+          ytIframe.style.display = 'none';
+          ytIframe.classList.remove('fade-in');
+        }
 
-      video.onended = () => {
-        stopDanceVideo();
-      };
+        const resolvedSrc = resolveVideoPath(videoSrc);
+        video.style.display = 'block';
+        video.pause();
+        video.currentTime = 0;
+        video.src = resolvedSrc;
+        try { video.load(); } catch(e) {}
+        video.muted = false;
+        video.volume = 1;
+
+        // 2. Esmaecer para entrar (fade-in)
+        setTimeout(() => {
+          video.classList.add('fade-in');
+        }, 180);
+
+        const p = video.play();
+        if (p !== undefined) {
+          p.catch(err => {
+            console.warn('Vídeo autoplay bloqueado pelo navegador:', err);
+            showUnlockBanner();
+            pendingVideoSrc = resolvedSrc;
+            // Fallback visual mudo se o navegador exigir interação
+            video.muted = true;
+            video.play().catch(() => {});
+          });
+        }
+
+        // Esmaecimento suave de saída (fade-out) 2 segundos antes do clipe terminar
+        video.ontimeupdate = () => {
+          if (video.duration && video.currentTime >= video.duration - 2) {
+            video.classList.remove('fade-in');
+          }
+        };
+
+        video.onended = () => {
+          stopDanceVideo();
+        };
+      }
     }
 
     function stopDanceVideo() {
       const arena = document.getElementById('arena-container');
       const video = document.getElementById('dance-video');
-      if (!arena || !video) return;
+      const ytIframe = document.getElementById('dance-youtube-iframe');
+      if (!arena) return;
 
-      video.classList.remove('fade-in');
+      if (video) video.classList.remove('fade-in');
+      if (ytIframe) ytIframe.classList.remove('fade-in');
 
       danceFadeTimeout = setTimeout(() => {
         arena.classList.remove('dance-active');
-        video.pause();
-        video.currentTime = 0;
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
+          video.style.display = 'block';
+        }
+        if (ytIframe) {
+          ytIframe.src = 'about:blank';
+          ytIframe.style.display = 'none';
+        }
       }, 700);
 
       try {
         channel.postMessage({ type: 'VIDEO_STOPPED' });
       } catch(e) {}
+      fetch('/api/action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'VIDEO_STOPPED' })
+      }).catch(() => {});
     }
 
     // ==========================================

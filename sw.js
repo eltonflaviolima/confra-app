@@ -1,26 +1,13 @@
 // Service Worker para Confra JBSN — Cache Resiliente Offline
-const CACHE_NAME = 'confra-jbsn-v2';
+const CACHE_NAME = 'confra-jbsn-v6';
 const ASSETS = [
   './',
   './index.html',
+  './host.html',
   './tela.html',
   './styles.css',
   './app.js',
-  './manifest.json',
-  './sounds/countdown.wav',
-  './sounds/countdown-3-2-1-go.mp3',
-  './sounds/super-smash-bros-mario-luigi-victory.mp3',
-  './sounds/naruto-sad-music-instant.mp3',
-  './sounds/celebration.mp3',
-  './sounds/whistle.wav',
-  './sounds/buzzer.wav',
-  './sounds/victory.wav',
-  './sounds/airhorn.wav',
-  './sounds/drumroll.wav',
-  './sounds/errou.wav',
-  './sounds/applause.wav',
-  './sounds/tension.wav',
-  'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,700&family=Noto+Sans:wght@400;500;600;700;800&display=swap'
+  './manifest.json'
 ];
 
 self.addEventListener('install', (e) => {
@@ -47,9 +34,34 @@ self.addEventListener('fetch', (e) => {
   if (e.request.url.includes('/api/') || e.request.method !== 'GET') {
     return;
   }
+
+  // Network-First para HTML, CSS e JS para atualizações imediatas
+  const isCodeAsset = e.request.mode === 'navigate' || 
+                      e.request.url.endsWith('.html') || 
+                      e.request.url.endsWith('.css') || 
+                      e.request.url.endsWith('.js') ||
+                      e.request.url.includes('.css?') ||
+                      e.request.url.includes('.js?');
+
+  if (isCodeAsset) {
+    e.respondWith(
+      fetch(e.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(e.request))
+    );
+    return;
+  }
+
+  // Cache-First para áudios, imagens e fontes
   e.respondWith(
     caches.match(e.request).then((res) => {
-      return res || fetch(e.request).catch(() => caches.match('./index.html'));
+      return res || fetch(e.request);
     })
   );
 });

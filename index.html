@@ -19,6 +19,10 @@
 
   <!-- Design System Stylesheet -->
   <link rel="stylesheet" href="./styles.css">
+  <style>
+    *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+    * { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+  </style>
 </head>
 <body>
 
@@ -81,7 +85,7 @@
       <section class="gateway-pane no-scrollbar" id="pane-participant-select">
         <div class="gateway-box" style="height: 100%; display: flex; flex-direction: column;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-            <button class="btn-tactile small secondary btn-back" onclick="gatewayGoTo(0)">
+            <button class="btn-tactile small secondary btn-back" onclick="gatewayGoTo(0)" style="width: auto !important; max-width: max-content !important; display: inline-flex !important; align-items: center; gap: 6px; padding: 6px 14px !important; font-size: 13px !important; font-weight: 800 !important;">
               <span>←</span> Voltar
             </button>
             <span class="micro-label" style="font-size: 11px;">Identificação</span>
@@ -112,7 +116,7 @@
       <section class="gateway-pane no-scrollbar" id="pane-host-auth">
         <div class="gateway-box">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
-            <button class="btn-tactile small secondary btn-back" onclick="gatewayGoTo(0)">
+            <button class="btn-tactile small secondary btn-back" onclick="gatewayGoTo(0)" style="width: auto !important; max-width: max-content !important; display: inline-flex !important; align-items: center; gap: 6px; padding: 6px 14px !important; font-size: 13px !important; font-weight: 800 !important;">
               <span>←</span> Voltar
             </button>
             <span class="micro-label" style="font-size: 11px;">Acesso Restrito</span>
@@ -744,14 +748,15 @@
   <!-- ====================================================
        MODAL 6: EDITAR NOMES DAS EQUIPES (ADMIN)
        ==================================================== -->
-  <div id="modal-edit-teams" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
+    <div id="modal-edit-teams" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-header">
-        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">✏️ Editar Equipes</h2>
+        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">✏️ Personalizar Equipes</h2>
         <button class="modal-close-btn" onclick="closeModals()">✕</button>
       </div>
 
+      <!-- Equipe 1 -->
       <div style="background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; padding: 12px; margin-bottom: 14px;">
         <span class="micro-label" style="color: #B45309;">Equipe 1</span>
         <div style="display: flex; gap: 8px; margin-top: 6px;">
@@ -764,18 +769,45 @@
             <input id="edit-team-a-name" class="form-input" type="text" placeholder="Ex: Time Sol">
           </div>
         </div>
+        <div style="margin-top: 10px;">
+          <label class="form-label" style="font-size: 11px; margin-bottom: 4px; display: block;">Cor da Equipe 1</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input id="edit-team-a-color" type="color" value="#FECB66" style="width: 44px; height: 34px; border: 2px solid var(--color-ink-primary); border-radius: 8px; cursor: pointer; padding: 2px; background: #fff;">
+            <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+              <span class="color-preset-dot" style="background: #FECB66;" title="Amarelo Mel" onclick="document.getElementById('edit-team-a-color').value='#FECB66'"></span>
+              <span class="color-preset-dot" style="background: #8EC5FC;" title="Azul Céu" onclick="document.getElementById('edit-team-a-color').value='#8EC5FC'"></span>
+              <span class="color-preset-dot" style="background: #FF6F89;" title="Coral Berry" onclick="document.getElementById('edit-team-a-color').value='#FF6F89'"></span>
+              <span class="color-preset-dot" style="background: #79D3A8;" title="Menta Fresca" onclick="document.getElementById('edit-team-a-color').value='#79D3A8'"></span>
+              <span class="color-preset-dot" style="background: #D8B4E2;" title="Lilás Suave" onclick="document.getElementById('edit-team-a-color').value='#D8B4E2'"></span>
+            </div>
+          </div>
+        </div>
       </div>
 
+      <!-- Equipe 2 -->
       <div style="background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; padding: 12px; margin-bottom: 16px;">
-        <span class="micro-label" style="color: var(--color-accent-coral-dark);">Equipe 2</span>
+        <span class="micro-label" style="color: #0284C7;">Equipe 2</span>
         <div style="display: flex; gap: 8px; margin-top: 6px;">
           <div style="width: 60px;">
             <label class="form-label" style="font-size: 11px;">Ícone</label>
-            <input id="edit-team-b-crest" class="form-input" style="text-align: center; font-size: 18px;" type="text" value="🔥" maxlength="4">
+            <input id="edit-team-b-crest" class="form-input" style="text-align: center; font-size: 18px;" type="text" value="🌊" maxlength="4">
           </div>
           <div style="flex: 1;">
             <label class="form-label" style="font-size: 11px;">Nome da Equipe</label>
-            <input id="edit-team-b-name" class="form-input" type="text" placeholder="Ex: Time Nascente">
+            <input id="edit-team-b-name" class="form-input" type="text" placeholder="Ex: Time Mar">
+          </div>
+        </div>
+        <div style="margin-top: 10px;">
+          <label class="form-label" style="font-size: 11px; margin-bottom: 4px; display: block;">Cor da Equipe 2</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input id="edit-team-b-color" type="color" value="#8EC5FC" style="width: 44px; height: 34px; border: 2px solid var(--color-ink-primary); border-radius: 8px; cursor: pointer; padding: 2px; background: #fff;">
+            <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+              <span class="color-preset-dot" style="background: #8EC5FC;" title="Azul Céu" onclick="document.getElementById('edit-team-b-color').value='#8EC5FC'"></span>
+              <span class="color-preset-dot" style="background: #FECB66;" title="Amarelo Mel" onclick="document.getElementById('edit-team-b-color').value='#FECB66'"></span>
+              <span class="color-preset-dot" style="background: #FF6F89;" title="Coral Berry" onclick="document.getElementById('edit-team-b-color').value='#FF6F89'"></span>
+              <span class="color-preset-dot" style="background: #79D3A8;" title="Menta Fresca" onclick="document.getElementById('edit-team-b-color').value='#79D3A8'"></span>
+              <span class="color-preset-dot" style="background: #D8B4E2;" title="Lilás Suave" onclick="document.getElementById('edit-team-b-color').value='#D8B4E2'"></span>
+            </div>
           </div>
         </div>
       </div>

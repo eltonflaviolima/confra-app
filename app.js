@@ -128,6 +128,29 @@ let VIDEOS_LIST = [
 
 // Canal de Comunicação em Tempo Real com o Telão (/tela)
 const broadcast = new BroadcastChannel('confra_jbsn_channel');
+broadcast.onmessage = (event) => {
+  if (event.data) {
+    if (event.data.type === 'VIDEO_STOPPED' || event.data.type === 'STOP_VIDEO') {
+      const stopWrapper = document.getElementById('btn-stop-dance-wrapper');
+      if (stopWrapper) stopWrapper.style.display = 'none';
+      const st = document.getElementById('dance-host-status');
+      if (st) {
+        st.textContent = '📺 Telão: Placar Restaurado';
+        st.style.background = 'var(--color-surface-tint)';
+        st.style.color = 'var(--color-ink-primary)';
+      }
+    } else if (event.data.type === 'PLAY_VIDEO') {
+      const stopWrapper = document.getElementById('btn-stop-dance-wrapper');
+      if (stopWrapper) stopWrapper.style.display = 'block';
+      const st = document.getElementById('dance-host-status');
+      if (st) {
+        st.textContent = `🎬 Reproduzindo no Telão: ${event.data.title || event.data.video}`;
+        st.style.background = 'var(--color-accent-coral-light)';
+        st.style.color = '#9E1F3B';
+      }
+    }
+  }
+};
 
 function broadcastSync() {
   try {
@@ -288,11 +311,12 @@ class AppState {
   constructor() {
     this.teams = {
       team_a: { id: 'team_a', name: 'Time Sol', color: '#FECB66', crest: '☀️', points: 0 },
-      team_b: { id: 'team_b', name: 'Time Nascente', color: '#FF6F89', crest: '🔥', points: 0 }
+      team_b: { id: 'team_b', name: 'Time Mar', color: '#8EC5FC', crest: '🌊', points: 0 }
     };
     this.provas = [...INITIAL_PROVAS];
     this.participants = [...INITIAL_PARTICIPANTS];
     this.logs = [];
+    this.customVideos = [];
     const isHostPage = window.location.pathname.includes('/host') || window.location.pathname.endsWith('host.html');
     this.isAdmin = isHostPage ? true : false;
     this.adminPin = '1234';
@@ -307,7 +331,8 @@ class AppState {
         provas: this.provas,
         participants: this.participants,
         logs: this.logs,
-        adminPin: this.adminPin
+        adminPin: this.adminPin,
+        customVideos: this.customVideos || []
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       this.recalculateTotalScores();
@@ -336,6 +361,7 @@ class AppState {
         }
         if (parsed.logs) this.logs = parsed.logs;
         if (parsed.adminPin) this.adminPin = parsed.adminPin;
+        if (parsed.customVideos) this.customVideos = parsed.customVideos;
       }
     } catch (e) {
       console.warn('Iniciando com estado padrão:', e);
@@ -351,6 +377,7 @@ class AppState {
     if (data.participants && data.participants.length > 0) this.participants = data.participants;
     if (data.logs) this.logs = data.logs;
     if (data.adminPin) this.adminPin = data.adminPin;
+    if (data.customVideos) this.customVideos = data.customVideos;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     this.recalculateTotalScores();
   }
@@ -376,6 +403,31 @@ class AppState {
           if (data && data.teams) {
             this.applyExternalState(data);
             renderUI();
+          }
+        } catch (err) {}
+      });
+
+      es.addEventListener('action', (e) => {
+        try {
+          const action = JSON.parse(e.data);
+          if (action.type === 'VIDEO_STOPPED' || action.type === 'STOP_VIDEO') {
+            const stopWrapper = document.getElementById('btn-stop-dance-wrapper');
+            if (stopWrapper) stopWrapper.style.display = 'none';
+            const st = document.getElementById('dance-host-status');
+            if (st) {
+              st.textContent = '📺 Telão: Placar Restaurado';
+              st.style.background = 'var(--color-surface-tint)';
+              st.style.color = 'var(--color-ink-primary)';
+            }
+          } else if (action.type === 'PLAY_VIDEO') {
+            const stopWrapper = document.getElementById('btn-stop-dance-wrapper');
+            if (stopWrapper) stopWrapper.style.display = 'block';
+            const st = document.getElementById('dance-host-status');
+            if (st) {
+              st.textContent = `🎬 Reproduzindo no Telão: ${action.title || action.video}`;
+              st.style.background = 'var(--color-accent-coral-light)';
+              st.style.color = '#9E1F3B';
+            }
           }
         } catch (err) {}
       });
@@ -508,13 +560,46 @@ class AppState {
     renderUI();
   }
 
-  updateTeamNames(nameA, nameB, crestA, crestB) {
+  updateTeamNames(nameA, nameB, crestA, crestB, colorA, colorB) {
     if (nameA && nameA.trim()) this.teams.team_a.name = nameA.trim();
     if (nameB && nameB.trim()) this.teams.team_b.name = nameB.trim();
     if (crestA && crestA.trim()) this.teams.team_a.crest = crestA.trim();
     if (crestB && crestB.trim()) this.teams.team_b.crest = crestB.trim();
+    if (colorA) this.teams.team_a.color = colorA;
+    if (colorB) this.teams.team_b.color = colorB;
     this.save();
     renderUI();
+  }
+
+  adicionarVideoYoutube(label, url) {
+    if (!label || !url) return false;
+    const cleanLabel = label.trim();
+    const cleanUrl = url.trim();
+    const videoId = extractYouTubeId(cleanUrl);
+    if (!videoId) {
+      alert('Link do YouTube inválido. Cole uma URL como https://www.youtube.com/watch?v=... ou https://youtu.be/...');
+      return false;
+    }
+    const newVideo = {
+      id: 'custom_vid_' + Date.now(),
+      label: cleanLabel,
+      url: cleanUrl,
+      videoId: videoId,
+      type: 'youtube',
+      color: ARCADE_COLORS[(VIDEOS_LIST.length + (this.customVideos ? this.customVideos.length : 0)) % ARCADE_COLORS.length]
+    };
+    if (!this.customVideos) this.customVideos = [];
+    this.customVideos.push(newVideo);
+    this.save();
+    renderVideos();
+    return true;
+  }
+
+  removerVideoCustomizado(id) {
+    if (!this.customVideos) return;
+    this.customVideos = this.customVideos.filter(v => v.id !== id);
+    this.save();
+    renderVideos();
   }
 }
 
@@ -646,8 +731,8 @@ class TelaoController {
     if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(50);
   }
 
-  playVideo(videoFile, videoTitle = '') {
-    this.sendAction('PLAY_VIDEO', { video: videoFile, title: videoTitle });
+  playVideo(videoFile, videoTitle = '', videoType = 'file') {
+    this.sendAction('PLAY_VIDEO', { video: videoFile, title: videoTitle, videoType: videoType });
     
     // Atualiza status e exibe botão parar vídeo no Host
     const stopWrapper = document.getElementById('btn-stop-dance-wrapper');
@@ -794,17 +879,17 @@ const telaoCtrl = new TelaoController();
 // 5. RENDERIZAÇÃO E INTERFACE (UI)
 // ==========================================
 function renderUI() {
-  renderScoreboard();
-  renderProvas();
-  renderParticipantes();
-  renderEquipes();
-  renderLogs();
-  renderAdminStatus();
-  renderInstants();
-  renderVideos();
-  renderSelectProvaTelao();
+  try { renderScoreboard(); } catch (e) { console.error('renderScoreboard error', e); }
+  try { renderProvas(); } catch (e) { console.error('renderProvas error', e); }
+  try { renderParticipantes(); } catch (e) { console.error('renderParticipantes error', e); }
+  try { renderEquipes(); } catch (e) { console.error('renderEquipes error', e); }
+  try { renderLogs(); } catch (e) { console.error('renderLogs error', e); }
+  try { renderAdminStatus(); } catch (e) { console.error('renderAdminStatus error', e); }
+  try { renderInstants(); } catch (e) { console.error('renderInstants error', e); }
+  try { renderVideos(); } catch (e) { console.error('renderVideos error', e); }
+  try { renderSelectProvaTelao(); } catch (e) { console.error('renderSelectProvaTelao error', e); }
   if (typeof telaoCtrl !== 'undefined') {
-    telaoCtrl.updateDisplay();
+    try { telaoCtrl.updateDisplay(); } catch (e) {}
   }
 }
 
@@ -833,8 +918,22 @@ function renderScoreboard() {
 
   const barA = document.getElementById('clash-fill-a');
   const barB = document.getElementById('clash-fill-b');
-  if (barA) barA.style.width = pctA + '%';
-  if (barB) barB.style.width = pctB + '%';
+  const colA = teamA.color || '#FECB66';
+  const colB = teamB.color || '#8EC5FC';
+  if (barA) {
+    barA.style.width = pctA + '%';
+    barA.style.background = colA;
+  }
+  if (barB) {
+    barB.style.width = pctB + '%';
+    barB.style.background = colB;
+  }
+  if (crestAEl && crestAEl.parentElement && crestAEl.parentElement.classList.contains('host-team-crest')) {
+    crestAEl.parentElement.style.background = colA;
+  }
+  if (crestBEl && crestBEl.parentElement && crestBEl.parentElement.classList.contains('host-team-crest')) {
+    crestBEl.parentElement.style.background = colB;
+  }
 
   const labelPctA = document.getElementById('label-pct-a');
   const labelPctB = document.getElementById('label-pct-b');
@@ -862,16 +961,16 @@ function renderProvas() {
         </div>
         <div class="prova-card-body">
           <h3 class="prova-title">${prova.title}</h3>
-          <p class="prova-desc-preview">${prova.summary || prova.description.slice(0, 80) + '...'}</p>
+          <p class="prova-desc-preview">${prova.summary || (prova.description ? prova.description.slice(0, 80) + '...' : 'Sem descrição detalhada.')}</p>
           <div class="prova-footer">
             <span style="font-size: 12px; font-weight: 700; color: var(--color-ink-primary);">
               🏆 ${prova.scoreRule}
             </span>
             <div style="display: flex; gap: 8px;">
-              <span class="tag-badge" style="background: var(--color-accent-yellow-light);">
+              <span class="tag-badge" style="background: ${state.teams.team_a.color || '#FECB66'}; color: var(--color-ink-primary); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">
                 ${state.teams.team_a.crest} ${prova.pointsA || 0}
               </span>
-              <span class="tag-badge" style="background: var(--color-accent-coral-light);">
+              <span class="tag-badge" style="background: ${state.teams.team_b.color || '#8EC5FC'}; color: var(--color-ink-primary); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">
                 ${state.teams.team_b.crest} ${prova.pointsB || 0}
               </span>
             </div>
@@ -882,12 +981,21 @@ function renderProvas() {
   }).join('');
 }
 
+let currentParticipantFilter = 'all';
+
+function filterParticipants(team, btn) {
+  currentParticipantFilter = team;
+  document.querySelectorAll('.filter-pill').forEach(el => el.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderParticipantes();
+}
+
 function renderParticipantes() {
   const container = document.getElementById('participants-list');
   if (!container) return;
 
-  const searchVal = (document.getElementById('search-participant')?.value || '').toLowerCase();
-  const filterTeam = document.getElementById('filter-team-select')?.value || 'all';
+  const searchVal = (document.getElementById('search-participant')?.value || '').toLowerCase().trim();
+  const filterTeam = currentParticipantFilter || document.getElementById('filter-team-select')?.value || 'all';
 
   const filtered = state.participants.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchVal) || (p.phone && p.phone.includes(searchVal));
@@ -904,14 +1012,22 @@ function renderParticipantes() {
   const countB = state.participants.filter(p => p.team === 'team_b').length;
   const countNone = state.participants.filter(p => !p.team).length;
 
+  const colA = state.teams.team_a.color || '#FECB66';
+  const colB = state.teams.team_b.color || '#8EC5FC';
+
   const teamCountsEl = document.getElementById('team-members-count');
   if (teamCountsEl) {
     teamCountsEl.innerHTML = `
-      <span class="tag-badge" style="background: var(--color-accent-yellow-light);">${state.teams.team_a.name}: ${countA}</span>
-      <span class="tag-badge" style="background: var(--color-accent-coral-light);">${state.teams.team_b.name}: ${countB}</span>
-      <span class="tag-badge" style="background: var(--color-surface-muted);">Sem time: ${countNone}</span>
+      <span class="tag-badge" style="background: ${colA}; color: var(--color-ink-primary); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">${state.teams.team_a.name}: ${countA}</span>
+      <span class="tag-badge" style="background: ${colB}; color: var(--color-ink-primary); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">${state.teams.team_b.name}: ${countB}</span>
+      <span class="tag-badge" style="background: var(--color-surface-muted); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">Sem time: ${countNone}</span>
     `;
   }
+
+  const btnTeamA = document.getElementById('filter-btn-team-a');
+  const btnTeamB = document.getElementById('filter-btn-team-b');
+  if (btnTeamA) btnTeamA.textContent = state.teams.team_a.name;
+  if (btnTeamB) btnTeamB.textContent = state.teams.team_b.name;
 
   if (filtered.length === 0) {
     container.innerHTML = `
@@ -924,14 +1040,14 @@ function renderParticipantes() {
 
   container.innerHTML = filtered.map(p => {
     const teamObj = p.team ? state.teams[p.team] : null;
-    const teamBadgeColor = p.team === 'team_a' ? 'var(--color-accent-yellow)' : (p.team === 'team_b' ? 'var(--color-accent-coral)' : '#FFF');
+    const teamBadgeColor = teamObj ? (teamObj.color || (p.team === 'team_a' ? '#FECB66' : '#8EC5FC')) : '#FFF';
     const initials = p.name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
 
     return `
       <div class="participant-item">
         <div class="participant-info">
-          <div class="participant-avatar" style="background: ${teamBadgeColor};">
-            ${p.team ? teamObj.crest : initials}
+          <div class="participant-avatar" style="background: ${teamBadgeColor}; color: var(--color-ink-primary); border: 2px solid var(--color-ink-primary);">
+            ${p.team && teamObj ? teamObj.crest : initials}
           </div>
           <div class="participant-details">
             <div class="participant-name">${p.name}</div>
@@ -1001,14 +1117,14 @@ function renderEquipes() {
 
     <!-- Card Time B -->
     <article class="bento-card" style="margin-bottom: 16px;">
-      <div class="card-header-tint" style="background: var(--color-accent-coral-light);">
+      <div class="card-header-tint" style="background: #E0F2FE;">
         <div style="display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 22px;">${teamB.crest}</span>
           <span class="micro-label" style="font-size: 13px; color: var(--color-ink-primary);">${teamB.name}</span>
         </div>
         <div style="display: flex; gap: 6px; align-items: center;">
           <span class="tag-badge tabular" style="background: var(--color-surface-pure); font-weight: 800;">${teamB.points} pts</span>
-          <span class="tag-badge" style="background: var(--color-accent-coral); color: #fff; font-weight: 800;">${membersB.length} membros</span>
+          <span class="tag-badge" style="background: ${teamB.color || '#8EC5FC'}; color: var(--color-ink-primary); font-weight: 800;">${membersB.length} membros</span>
         </div>
       </div>
       <div class="card-body">
@@ -1136,18 +1252,113 @@ function renderInstants() {
   });
 }
 
-// Renderiza os Botões Arcade dos Vídeos no Telão
+function extractYouTubeId(url) {
+  if (!url) return '';
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+  return match ? match[1] : '';
+}
+
+// Renderiza os Botões Arcade dos Vídeos no Telão (Locais + YouTube)
 function renderVideos() {
   const container = document.getElementById('videos-grid-telao');
   if (!container) return;
-  container.innerHTML = VIDEOS_LIST.map(item => `
-    <div class="instant-card" onclick="telaoCtrl.playVideo('${item.file}', '${item.label}')" title="${item.label}">
+
+  const customVideos = (state && state.customVideos) ? state.customVideos : [];
+  
+  const allVideos = [
+    ...VIDEOS_LIST.map(item => ({ ...item, isCustom: false })),
+    ...customVideos.map((item, idx) => ({
+      id: item.id,
+      label: item.label,
+      file: item.url,
+      type: 'youtube',
+      color: item.color || ARCADE_COLORS[(VIDEOS_LIST.length + idx) % ARCADE_COLORS.length],
+      isCustom: true
+    }))
+  ];
+
+  container.innerHTML = allVideos.map(item => `
+    <div class="instant-card" onclick="telaoCtrl.playVideo('${item.file}', '${item.label.replace(/'/g, "\\'")}', '${item.type || 'file'}')" title="${item.label}">
       <div class="instant-button-outer">
         <div class="instant-dome ${item.color}"></div>
       </div>
-      <span class="instant-label">${item.label}</span>
+      <span class="instant-label">
+        ${item.isCustom ? '▶️ ' : ''}${item.label}
+      </span>
     </div>
   `).join('');
+
+  renderCustomVideosManager();
+}
+
+function renderCustomVideosManager() {
+  const listWrapper = document.getElementById('custom-videos-manager-list');
+  const itemsContainer = document.getElementById('custom-videos-items');
+  if (!listWrapper || !itemsContainer) return;
+
+  const customVideos = (state && state.customVideos) ? state.customVideos : [];
+  if (customVideos.length === 0) {
+    listWrapper.style.display = 'none';
+    itemsContainer.innerHTML = '';
+    return;
+  }
+
+  listWrapper.style.display = 'block';
+  itemsContainer.innerHTML = customVideos.map(v => `
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 14px; background: #FFFFFF; border: 2px solid var(--color-ink-primary); border-radius: 16px; box-shadow: var(--shadow-tactile-sm);">
+      <div style="min-width: 0; flex: 1;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 14px;">▶️</span>
+          <strong style="font-size: 13px; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">
+            ${v.label}
+          </strong>
+        </div>
+        <span style="font-size: 11px; color: var(--color-ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">
+          ${v.url}
+        </span>
+      </div>
+      <button type="button" class="btn-tactile secondary" style="width: auto !important; padding: 6px 12px !important; font-size: 11px !important; border-color: var(--color-accent-coral); color: var(--color-accent-coral); flex-shrink: 0;" onclick="deleteCustomVideo('${v.id}')">
+        🗑️ Excluir
+      </button>
+    </div>
+  `).join('');
+}
+
+function submitNewYouTubeVideo() {
+  const titleInput = document.getElementById('new-video-title');
+  const urlInput = document.getElementById('new-video-url');
+  if (!titleInput || !urlInput) return;
+
+  const title = titleInput.value.trim();
+  const url = urlInput.value.trim();
+
+  if (!title || !url) {
+    alert('Por favor, informe o nome do botão e o link do YouTube.');
+    return;
+  }
+
+  const success = state.adicionarVideoYoutube(title, url);
+  if (success) {
+    titleInput.value = '';
+    urlInput.value = '';
+    const st = document.getElementById('dance-host-status');
+    if (st) {
+      st.textContent = `✨ Botão "${title}" adicionado aos botões!`;
+      st.style.background = 'var(--color-accent-mint-light)';
+      st.style.color = '#2E7D32';
+      setTimeout(() => {
+        st.textContent = '📺 Telão: Nenhum vídeo em reprodução';
+        st.style.background = 'var(--color-surface-tint)';
+        st.style.color = 'var(--color-ink-primary)';
+      }, 3500);
+    }
+  }
+}
+
+function deleteCustomVideo(id) {
+  if (confirm('Deseja realmente remover este botão de vídeo do Telão?')) {
+    state.removerVideoCustomizado(id);
+  }
 }
 
 // Carrega listas de mídia dinamicamente do servidor
@@ -1353,10 +1564,11 @@ function renderSelectProvaTelao() {
   const sel = document.getElementById('select-prova-telao');
   if (!sel) return;
   const currentVal = sel.value;
-  sel.innerHTML = '<option value="" disabled ' + (!currentVal ? 'selected' : '') + '>-- Selecione a prova para apresentar --</option>' +
-    state.provas.map(p => `
+  const list = (window.state && window.state.provas && window.state.provas.length > 0) ? window.state.provas : INITIAL_PROVAS;
+  sel.innerHTML = '<option value="" disabled ' + (!currentVal ? 'selected' : '') + '>-- Escolha uma prova para projetar --</option>' +
+    list.map(p => `
       <option value="${p.id}" ${currentVal === p.id ? 'selected' : ''}>
-        ${p.icon} ${p.title} (${p.category})
+        ${p.icon || '🎯'} ${p.title} (${p.category || 'Geral'})
       </option>
     `).join('');
 }
@@ -1462,11 +1674,15 @@ function openEditTeamsModal() {
   const inputNameB = document.getElementById('edit-team-b-name');
   const inputCrestA = document.getElementById('edit-team-a-crest');
   const inputCrestB = document.getElementById('edit-team-b-crest');
+  const inputColorA = document.getElementById('edit-team-a-color');
+  const inputColorB = document.getElementById('edit-team-b-color');
 
   if (inputNameA) inputNameA.value = state.teams.team_a.name;
   if (inputNameB) inputNameB.value = state.teams.team_b.name;
   if (inputCrestA) inputCrestA.value = state.teams.team_a.crest || '☀️';
-  if (inputCrestB) inputCrestB.value = state.teams.team_b.crest || '🔥';
+  if (inputCrestB) inputCrestB.value = state.teams.team_b.crest || '🌊';
+  if (inputColorA) inputColorA.value = state.teams.team_a.color || '#FECB66';
+  if (inputColorB) inputColorB.value = state.teams.team_b.color || '#8EC5FC';
 
   const modal = document.getElementById('modal-edit-teams');
   if (modal) modal.classList.add('open');
@@ -1477,13 +1693,15 @@ function submitEditTeams() {
   const nameB = document.getElementById('edit-team-b-name').value;
   const crestA = document.getElementById('edit-team-a-crest').value;
   const crestB = document.getElementById('edit-team-b-crest').value;
+  const colorA = document.getElementById('edit-team-a-color')?.value || state.teams.team_a.color || '#FECB66';
+  const colorB = document.getElementById('edit-team-b-color')?.value || state.teams.team_b.color || '#8EC5FC';
 
   if (!nameA || !nameB) {
     alert('Por favor preencha os nomes das duas equipes.');
     return;
   }
 
-  state.updateTeamNames(nameA, nameB, crestA, crestB);
+  state.updateTeamNames(nameA, nameB, crestA, crestB, colorA, colorB);
   closeModals();
   sounds.play('victory.wav', false);
 }
@@ -1551,19 +1769,19 @@ function renderEntryParticipants(filter = '') {
     const initials = p.name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
 
     return `
-      <div class="participant-entry-card" onclick="selectParticipant('${p.id}')">
-        <div class="participant-info">
-          <div class="participant-avatar" style="background: ${teamColor};">
+      <div class="participant-entry-card" onclick="selectParticipant('${p.id}')" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; background: #FFFFFF; border: 2.5px solid var(--color-ink-primary); border-radius: 18px; box-shadow: 0 4px 0 0 var(--color-ink-primary); cursor: pointer; user-select: none;">
+        <div class="participant-info" style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
+          <div class="participant-avatar" style="background: ${teamColor}; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--color-ink-primary); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
             ${teamObj ? teamObj.crest : initials}
           </div>
-          <div class="participant-details">
-            <div class="participant-name" style="font-size: 15px; font-weight: 800; color: var(--color-ink-primary); line-height: 1.2;">${p.name}</div>
-            <div class="participant-sub" style="margin-top: 4px;">
-              <span class="tag-badge" style="background: ${teamBg}; font-size: 11px; padding: 2px 8px; font-weight: 700;">${teamLabel}</span>
+          <div class="participant-details" style="min-width: 0; flex: 1;">
+            <div class="participant-name" style="font-size: 15px; font-weight: 800; color: var(--color-ink-primary); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</div>
+            <div class="participant-sub" style="margin-top: 4px; display: flex; align-items: center;">
+              <span class="tag-badge" style="background: ${teamBg}; border: 1.5px solid var(--color-ink-primary); border-radius: 9999px; font-size: 11px; padding: 2px 8px; font-weight: 800;">${teamLabel}</span>
             </div>
           </div>
         </div>
-        <div class="entry-enter-pill">
+        <div class="entry-enter-pill" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 9999px; border: 2px solid var(--color-ink-primary); background: var(--color-accent-yellow); color: var(--color-ink-primary); font-size: 12px; font-weight: 800; box-shadow: 0 2px 0 0 var(--color-ink-primary); flex-shrink: 0; white-space: nowrap;">
           <span>Entrar</span>
           <span>➔</span>
         </div>

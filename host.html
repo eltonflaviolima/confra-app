@@ -63,6 +63,355 @@
       background: #FEE2E2;
       color: #991B1B;
     }
+  
+    .filter-pills-row {
+      display: flex !important;
+      gap: 8px !important;
+      overflow-x: auto !important;
+      padding-bottom: 4px !important;
+      margin-bottom: 14px !important;
+    }
+    .filter-pill {
+      padding: 7px 16px !important;
+      border-radius: 9999px !important;
+      border: 2px solid var(--color-ink-primary) !important;
+      background: #FFFFFF !important;
+      color: var(--color-ink-primary) !important;
+      font-family: 'Noto Sans', sans-serif !important;
+      font-size: 12px !important;
+      font-weight: 800 !important;
+      cursor: pointer !important;
+      box-shadow: 0 2px 0 0 var(--color-ink-primary) !important;
+      transition: transform 0.1s var(--ease-tactile), box-shadow 0.1s !important;
+      white-space: nowrap !important;
+      outline: none !important;
+      flex-shrink: 0 !important;
+    }
+    .filter-pill:active {
+      transform: translateY(2px) !important;
+      box-shadow: none !important;
+    }
+    .filter-pill.active {
+      background: var(--color-accent-yellow) !important;
+      color: var(--color-ink-primary) !important;
+      box-shadow: 0 1px 0 0 var(--color-ink-primary) !important;
+    }
+  </style>
+  <style>
+    /* =========================================================
+       PLACAR E MINI-BOTÕES TÁTEIS DO HOST (DESIGN SYSTEM CONFRA)
+       ========================================================= */
+    .scoreboard-card {
+      background: #FFFFFF !important;
+      border: 2.5px solid var(--color-ink-primary) !important;
+      border-radius: 24px !important;
+      box-shadow: 0 8px 0 0 var(--color-ink-primary) !important;
+      margin-bottom: 18px !important;
+      overflow: hidden !important;
+    }
+
+    .scoreboard-header {
+      background: #FDF6E2 !important;
+      border-bottom: 2.5px solid var(--color-ink-primary) !important;
+      padding: 10px 14px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+    }
+
+    .scoreboard-header-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Fraunces', serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-ink-primary);
+    }
+
+    .btn-edit-teams {
+      width: auto !important;
+      max-width: max-content !important;
+      flex-shrink: 0 !important;
+      white-space: nowrap !important;
+      padding: 6px 14px !important;
+      font-size: 11px !important;
+      font-weight: 800 !important;
+      border-radius: 9999px !important;
+      border: 2px solid var(--color-ink-primary) !important;
+      background: #FFFFFF !important;
+      color: var(--color-ink-primary) !important;
+      box-shadow: 0 2px 0 0 var(--color-ink-primary) !important;
+      cursor: pointer !important;
+      transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+    }
+    .btn-edit-teams:active {
+      transform: translateY(2px) !important;
+      box-shadow: none !important;
+    }
+
+    .host-scoreboard-arena {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 12px !important;
+      position: relative !important;
+      padding: 14px 10px !important;
+      background: #FFF9EE !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+    }
+
+    .host-vs-divider {
+      position: absolute !important;
+      top: 50px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 34px !important;
+      height: 34px !important;
+      border-radius: 50% !important;
+      background: #FFF9EE !important;
+      border: 2.5px solid var(--color-ink-primary) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-family: 'Fraunces', serif !important;
+      font-size: 12px !important;
+      font-weight: 900 !important;
+      color: var(--color-ink-primary) !important;
+      box-shadow: 0 3px 0 0 var(--color-ink-primary) !important;
+      z-index: 10 !important;
+      pointer-events: none !important;
+    }
+
+    .host-team-box {
+      background: #FFFFFF !important;
+      border: 2.5px solid var(--color-ink-primary) !important;
+      border-radius: 20px !important;
+      padding: 14px 8px 12px 8px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      text-align: center !important;
+      box-shadow: 0 4px 0 0 var(--color-ink-primary) !important;
+      position: relative !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    .host-team-box.team-a {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF2 100%) !important;
+    }
+
+    .host-team-box.team-b {
+      background: linear-gradient(180deg, #FFFFFF 0%, #F0F8FF 100%) !important;
+    }
+
+    .host-team-crest {
+      width: 48px !important;
+      height: 48px !important;
+      border-radius: 50% !important;
+      border: 2.5px solid var(--color-ink-primary) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 24px !important;
+      box-shadow: 0 3px 0 0 var(--color-ink-primary) !important;
+      margin-bottom: 6px !important;
+      flex-shrink: 0 !important;
+    }
+
+    .host-team-title {
+      font-family: 'Fraunces', serif !important;
+      font-size: 16px !important;
+      font-weight: 900 !important;
+      color: var(--color-ink-primary) !important;
+      line-height: 1.15 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 100% !important;
+      margin-bottom: 2px !important;
+    }
+
+    .host-score-number-wrap {
+      margin: 4px 0 8px 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+
+    .host-pts-giant {
+      font-family: 'Fraunces', serif !important;
+      font-size: 50px !important;
+      font-weight: 900 !important;
+      line-height: 0.95 !important;
+      color: var(--color-ink-primary) !important;
+      letter-spacing: -0.04em !important;
+      font-variant-numeric: tabular-nums !important;
+    }
+
+    .host-pts-label {
+      font-size: 10px !important;
+      font-weight: 900 !important;
+      letter-spacing: 0.12em !important;
+      text-transform: uppercase !important;
+      color: rgba(58, 0, 29, 0.55) !important;
+      margin-top: 2px !important;
+    }
+
+    /* MINI BOTÕES DE PONTUAÇÃO RÁPIDA (GRID 2x2 TÁTIL) */
+    .host-quick-actions {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 6px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .btn-quick-score {
+      height: 38px !important;
+      border: 2px solid var(--color-ink-primary) !important;
+      border-radius: 9999px !important;
+      font-family: 'Noto Sans', sans-serif !important;
+      font-weight: 900 !important;
+      font-size: 14px !important;
+      letter-spacing: -0.02em !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      box-shadow: 0 3px 0 0 var(--color-ink-primary) !important;
+      transition: transform 0.08s ease, box-shadow 0.08s ease !important;
+      user-select: none !important;
+      font-variant-numeric: tabular-nums !important;
+      padding: 0 !important;
+      outline: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+
+    .btn-quick-score:active {
+      transform: translateY(3px) !important;
+      box-shadow: 0 0 0 0 var(--color-ink-primary) !important;
+    }
+
+    /* Cores Sol */
+    .host-team-box.team-a .btn-quick-score.btn-pt-1 {
+      background: #FFFFFF !important;
+      color: var(--color-ink-primary) !important;
+    }
+    .host-team-box.team-a .btn-quick-score.btn-pt-5,
+    .host-team-box.team-a .btn-quick-score.btn-pt-10 {
+      background: var(--color-accent-yellow) !important;
+      color: var(--color-ink-primary) !important;
+    }
+
+    /* Cores Mar */
+    .host-team-box.team-b .btn-quick-score.btn-pt-1 {
+      background: #FFFFFF !important;
+      color: var(--color-ink-primary) !important;
+    }
+    .host-team-box.team-b .btn-quick-score.btn-pt-5,
+    .host-team-box.team-b .btn-quick-score.btn-pt-10 {
+      background: #8EC5FC !important;
+      color: var(--color-ink-primary) !important;
+    }
+
+    /* Botão Penalidade (-1) */
+    .btn-quick-score.btn-pt-minus {
+      background: #FEE2E2 !important;
+      color: #DC2626 !important;
+      border-color: var(--color-ink-primary) !important;
+    }
+    .btn-quick-score.btn-pt-minus:active {
+      background: #FECACA !important;
+    }
+
+    /* Barra de Disputa / Gauge */
+    .scoreboard-clash-wrap {
+      padding: 0 14px 14px 14px !important;
+      background: #FFF9EE !important;
+      border-top: 2px dashed rgba(58, 0, 29, 0.2) !important;
+      margin-top: 2px !important;
+      padding-top: 10px !important;
+    }
+
+    .scoreboard-clash-labels {
+      display: flex !important;
+      justify-content: space-between !important;
+      font-size: 11px !important;
+      font-weight: 900 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+      color: var(--color-ink-primary) !important;
+      margin-bottom: 6px !important;
+    }
+
+    .scoreboard-clash-track {
+      height: 20px !important;
+      background: #F3EBDB !important;
+      border: 2.5px solid var(--color-ink-primary) !important;
+      border-radius: 9999px !important;
+      overflow: hidden !important;
+      display: flex !important;
+      box-shadow: inset 0 2px 4px rgba(58, 0, 29, 0.1) !important;
+    }
+
+    .btn-detailed-score {
+      width: 100% !important;
+      font-size: 14px !important;
+      font-weight: 900 !important;
+      padding: 13px !important;
+      border-radius: 9999px !important;
+      background: var(--color-accent-yellow) !important;
+      border: 2.5px solid var(--color-ink-primary) !important;
+      color: var(--color-ink-primary) !important;
+      box-shadow: 0 4px 0 0 var(--color-ink-primary) !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 8px !important;
+      transition: transform 0.08s ease, box-shadow 0.08s ease !important;
+    }
+    .btn-detailed-score:active {
+      transform: translateY(3px) !important;
+      box-shadow: 0 1px 0 0 var(--color-ink-primary) !important;
+    }
+  
+    .filter-pills-row {
+      display: flex !important;
+      gap: 8px !important;
+      overflow-x: auto !important;
+      padding-bottom: 4px !important;
+      margin-bottom: 14px !important;
+    }
+    .filter-pill {
+      padding: 7px 16px !important;
+      border-radius: 9999px !important;
+      border: 2px solid var(--color-ink-primary) !important;
+      background: #FFFFFF !important;
+      color: var(--color-ink-primary) !important;
+      font-family: 'Noto Sans', sans-serif !important;
+      font-size: 12px !important;
+      font-weight: 800 !important;
+      cursor: pointer !important;
+      box-shadow: 0 2px 0 0 var(--color-ink-primary) !important;
+      transition: transform 0.1s var(--ease-tactile), box-shadow 0.1s !important;
+      white-space: nowrap !important;
+      outline: none !important;
+      flex-shrink: 0 !important;
+    }
+    .filter-pill:active {
+      transform: translateY(2px) !important;
+      box-shadow: none !important;
+    }
+    .filter-pill.active {
+      background: var(--color-accent-yellow) !important;
+      color: var(--color-ink-primary) !important;
+      box-shadow: 0 1px 0 0 var(--color-ink-primary) !important;
+    }
   </style>
 </head>
 <body>
@@ -133,87 +482,100 @@
             </div>
             <span class="tag-badge" style="background: var(--color-accent-yellow-light); font-size: 10px; font-weight: 800;">Ao Vivo</span>
           </div>
-          <div class="card-body" style="padding: 12px 14px;">
-            <label class="form-label" for="select-prova-telao" style="font-size: 12px; font-weight: 800; color: var(--color-ink-primary); margin-bottom: 6px; display: block;">
-              Escolha a prova:
+          <div class="card-body" style="padding: 14px;">
+            <label class="form-label" for="select-prova-telao" style="font-size: 12px; font-weight: 800; color: var(--color-ink-primary); margin-bottom: 8px; display: block;">
+              Escolha a prova para projetar no Telão:
             </label>
-            <div style="display: flex; gap: 8px; align-items: center;">
-              <select id="select-prova-telao" class="form-select" onchange="selecionarProvaTelao(this.value)" style="flex: 1; font-weight: 700; font-size: 14px; padding: 10px 12px;">
-                <option value="" disabled selected>-- Selecione para projetar --</option>
-              </select>
-              <button class="btn-tactile primary small" style="white-space: nowrap; padding: 10px 14px; font-size: 12px;" onclick="const val = document.getElementById('select-prova-telao').value; if(val) selecionarProvaTelao(val); else alert('Selecione uma prova primeiro!');" title="Projetar no Telão">
+            <div style="display: flex; gap: 10px; align-items: center; width: 100%;">
+              <div style="flex: 1; min-width: 0;">
+                <select id="select-prova-telao" class="form-select" onchange="selecionarProvaTelao(this.value)" style="width: 100%; min-width: 0; font-weight: 700; font-size: 14px; padding: 12px 16px; background: #FFFFFF; border: 2.5px solid var(--color-ink-primary); border-radius: 9999px; box-shadow: var(--shadow-tactile-sm); color: var(--color-ink-primary); cursor: pointer; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                  <option value="" disabled selected>-- Escolha uma prova para projetar --</option>
+                  <option value="adesivos">🏷️ Guerra dos Adesivos (O Dia Todo)</option>
+                  <option value="dois-corpos">📦 Dois Corpos Ocupam o Mesmo Lugar</option>
+                  <option value="splash">🌊 Splash! Salto na Piscina</option>
+                </select>
+              </div>
+              <button type="button" class="btn-tactile primary small" style="flex: 0 0 auto; width: auto !important; max-width: max-content !important; white-space: nowrap; padding: 12px 20px; font-size: 13px; font-weight: 800; border-radius: 9999px;" onclick="const val = document.getElementById('select-prova-telao').value; if(val) selecionarProvaTelao(val); else alert('Selecione uma prova primeiro!');" title="Projetar no Telão">
                 <span>📺 Projetar</span>
               </button>
             </div>
-            <div id="status-prova-apresentada" style="display: none; margin-top: 8px; font-size: 11px; font-weight: 700; color: #2E7D32; background: var(--color-accent-mint-light); border-radius: 8px; padding: 6px 10px; text-align: center;"></div>
+            <div id="status-prova-apresentada" style="display: none; margin-top: 10px; font-size: 12px; font-weight: 800; color: #166534; background: var(--color-accent-mint-light); border: 2px solid var(--color-ink-primary); border-radius: 12px; padding: 8px 12px; text-align: center;"></div>
           </div>
         </article>
-        <section class="bento-card scoreboard-card" style="margin-bottom: 16px;">
-          <div class="card-header-tint">
-            <span class="micro-label">Placar Oficial da Gincana</span>
-            <button class="btn-tactile small secondary" onclick="openEditTeamsModal()" style="padding: 4px 10px; font-size: 11px;">
+                <section class="scoreboard-card">
+          <div class="scoreboard-header">
+            <div class="scoreboard-header-title">
+              <span>🏆</span>
+              <span>Placar Oficial da Gincana</span>
+            </div>
+            <button type="button" class="btn-edit-teams" onclick="openEditTeamsModal()">
               ✏️ Editar Equipes
             </button>
           </div>
 
-          <div class="scoreboard-arena">
+          <div class="host-scoreboard-arena">
             <!-- Time A (Sol) -->
-            <div class="team-score-card">
-              <div class="team-crest" style="background: var(--color-accent-yellow-light);">
+            <div class="host-team-box team-a">
+              <div class="host-team-crest" style="background: #FECB66;">
                 <span id="host-crest-a">☀️</span>
               </div>
-              <div id="team-a-name" class="team-name">Time Sol</div>
-              <div id="team-a-pts" class="team-pts-giant tabular">0</div>
-              <span class="team-pts-label">Pontos</span>
+              <div id="team-a-name" class="host-team-title">Time Sol</div>
+              
+              <div class="host-score-number-wrap">
+                <div id="team-a-pts" class="host-pts-giant tabular">0</div>
+                <span class="host-pts-label">PONTOS</span>
+              </div>
 
-              <!-- Botões de Lançamento Rápido Time A -->
-              <div class="host-quick-score-row">
-                <button class="btn-quick-pt" onclick="quickAddPoints('team_a', 1)" title="Adicionar 1 ponto">+1</button>
-                <button class="btn-quick-pt" onclick="quickAddPoints('team_a', 5)" title="Adicionar 5 pontos">+5</button>
-                <button class="btn-quick-pt" onclick="quickAddPoints('team_a', 10)" title="Adicionar 10 pontos">+10</button>
-                <button class="btn-quick-pt minus" onclick="quickAddPoints('team_a', -1)" title="Remover 1 ponto">-1</button>
+              <!-- Mini Botões de Pontuação Rápida Time A (Grid 2x2) -->
+              <div class="host-quick-actions">
+                <button type="button" class="btn-quick-score btn-pt-1" onclick="quickAddPoints('team_a', 1)" title="Adicionar 1 ponto">+1</button>
+                <button type="button" class="btn-quick-score btn-pt-5" onclick="quickAddPoints('team_a', 5)" title="Adicionar 5 pontos">+5</button>
+                <button type="button" class="btn-quick-score btn-pt-10" onclick="quickAddPoints('team_a', 10)" title="Adicionar 10 pontos">+10</button>
+                <button type="button" class="btn-quick-score btn-pt-minus" onclick="quickAddPoints('team_a', -1)" title="Remover 1 ponto">-1</button>
               </div>
             </div>
 
-            <!-- Emblema Central VS -->
-            <div class="vs-badge-center">VS</div>
+            <!-- Emblema Central VS Flutuante -->
+            <div class="host-vs-divider">VS</div>
 
-            <!-- Time B (Nascente) -->
-            <div class="team-score-card">
-              <div class="team-crest" style="background: var(--color-accent-coral-light);">
-                <span id="host-crest-b">🔥</span>
+            <!-- Time B (Mar) -->
+            <div class="host-team-box team-b">
+              <div class="host-team-crest" style="background: #8EC5FC;">
+                <span id="host-crest-b">🌊</span>
               </div>
-              <div id="team-b-name" class="team-name">Time Nascente</div>
-              <div id="team-b-pts" class="team-pts-giant tabular">0</div>
-              <span class="team-pts-label">Pontos</span>
+              <div id="team-b-name" class="host-team-title">Time Mar</div>
 
-              <!-- Botões de Lançamento Rápido Time B -->
-              <div class="host-quick-score-row">
-                <button class="btn-quick-pt" onclick="quickAddPoints('team_b', 1)" title="Adicionar 1 ponto">+1</button>
-                <button class="btn-quick-pt" onclick="quickAddPoints('team_b', 5)" title="Adicionar 5 pontos">+5</button>
-                <button class="btn-quick-pt" onclick="quickAddPoints('team_b', 10)" title="Adicionar 10 pontos">+10</button>
-                <button class="btn-quick-pt minus" onclick="quickAddPoints('team_b', -1)" title="Remover 1 ponto">-1</button>
+              <div class="host-score-number-wrap">
+                <div id="team-b-pts" class="host-pts-giant tabular">0</div>
+                <span class="host-pts-label">PONTOS</span>
+              </div>
+
+              <!-- Mini Botões de Pontuação Rápida Time B (Grid 2x2) -->
+              <div class="host-quick-actions">
+                <button type="button" class="btn-quick-score btn-pt-1" onclick="quickAddPoints('team_b', 1)" title="Adicionar 1 ponto">+1</button>
+                <button type="button" class="btn-quick-score btn-pt-5" onclick="quickAddPoints('team_b', 5)" title="Adicionar 5 pontos">+5</button>
+                <button type="button" class="btn-quick-score btn-pt-10" onclick="quickAddPoints('team_b', 10)" title="Adicionar 10 pontos">+10</button>
+                <button type="button" class="btn-quick-score btn-pt-minus" onclick="quickAddPoints('team_b', -1)" title="Remover 1 ponto">-1</button>
               </div>
             </div>
           </div>
 
-          <!-- Barra de Disputa / Equilíbrio -->
-          <div class="clash-bar-wrapper">
-            <div class="clash-bar-labels">
+          <!-- Barra de Disputa / Gauge -->
+          <div class="scoreboard-clash-wrap">
+            <div class="scoreboard-clash-labels">
               <span id="label-pct-a" class="tabular">Time Sol: 50%</span>
-              <span id="label-pct-b" class="tabular">Time Nascente: 50%</span>
+              <span id="label-pct-b" class="tabular">Time Mar: 50%</span>
             </div>
-            <div class="clash-bar-track">
-              <div id="clash-fill-a" class="clash-bar-fill-a" style="width: 50%;"></div>
-              <div id="clash-fill-b" class="clash-bar-fill-b" style="width: 50%;"></div>
+            <div class="scoreboard-clash-track">
+              <div id="clash-fill-a" class="clash-bar-fill-a" style="width: 50%; height: 100%; background: #FECB66; border-right: 2px solid var(--color-ink-primary); transition: width 0.4s ease;"></div>
+              <div id="clash-fill-b" class="clash-bar-fill-b" style="width: 50%; height: 100%; background: #8EC5FC; transition: width 0.4s ease;"></div>
             </div>
-          </div>
-
-          <!-- Botão Lançamento Detalhado com Motivo -->
-          <div style="margin-top: 14px;">
-            <button class="btn-tactile primary" onclick="openScoreModal()">
-              <span>⚡ Lançar Pontos por Prova (Detalhado)</span>
-            </button>
+            
+            <div style="margin-top: 12px;">
+              <button type="button" class="btn-detailed-score" onclick="openScoreModal()">
+                <span>⚡ Lançar Pontos por Prova (Detalhado)</span>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -312,6 +674,44 @@
             </div>
           </div>
         </article>
+
+        <!-- CARD: ADICIONAR NOVO VÍDEO DO YOUTUBE -->
+        <article class="bento-card" style="margin-top: 16px;">
+          <div class="card-header-tint" style="background: var(--color-accent-yellow-light);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 18px;">➕</span>
+              <span class="micro-label" style="color: var(--color-ink-primary);">Adicionar Vídeo do YouTube</span>
+            </div>
+            <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #B45309;">Online</span>
+          </div>
+          <div class="card-body">
+            <p style="font-size: 12px; color: var(--color-ink-muted); margin-bottom: 14px;">
+              Cole o link de um vídeo do YouTube para criar um botão de dança no Telão sem precisar baixar:
+            </p>
+            <form id="form-add-youtube-video" onsubmit="event.preventDefault(); submitNewYouTubeVideo();" style="display: flex; flex-direction: column; gap: 12px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="new-video-title" style="font-size: 12px; font-weight: 800;">Nome / Rótulo do Botão</label>
+                <input id="new-video-title" class="form-input" type="text" placeholder="Ex: Macarena, Dança do Pinguim..." required>
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="new-video-url" style="font-size: 12px; font-weight: 800;">Link do YouTube</label>
+                <input id="new-video-url" class="form-input" type="url" placeholder="https://www.youtube.com/watch?v=... ou https://youtu.be/..." required>
+              </div>
+              <button type="submit" class="btn-tactile primary" style="width: 100%; font-size: 13px; font-weight: 800; padding: 12px; margin-top: 4px;">
+                <span>✨ Criar Botão de Vídeo</span>
+              </button>
+            </form>
+
+            <!-- Lista gerenciadora de vídeos adicionados (com botão excluir) -->
+            <div id="custom-videos-manager-list" style="margin-top: 18px; display: none;">
+              <div style="border-top: 2px dashed rgba(58, 0, 29, 0.15); margin-bottom: 12px;"></div>
+              <span class="micro-label" style="display: block; margin-bottom: 8px; color: var(--color-ink-muted);">Vídeos Adicionados pelo Host</span>
+              <div id="custom-videos-items" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Itens dinâmicos via renderCustomVideosManager() -->
+              </div>
+            </div>
+          </div>
+        </article>
       </div>
 
       <!-- SUB-VIEW 4: SONS (PAINEL DE CONTROLE DE SONS E EFEITOS) -->
@@ -392,10 +792,10 @@
 
       <!-- Filtros Rápidos -->
       <div class="filter-pills-row" style="margin-bottom: 14px;">
-        <button class="filter-pill active" onclick="filterParticipants('all', this)">Todos</button>
-        <button class="filter-pill" onclick="filterParticipants('team_a', this)">Time Sol</button>
-        <button class="filter-pill" onclick="filterParticipants('team_b', this)">Time Nascente</button>
-        <button class="filter-pill" onclick="filterParticipants('none', this)">Sem Time</button>
+        <button type="button" class="filter-pill active" onclick="filterParticipants('all', this)">Todos</button>
+        <button type="button" id="filter-btn-team-a" class="filter-pill" onclick="filterParticipants('team_a', this)">Time Sol</button>
+        <button type="button" id="filter-btn-team-b" class="filter-pill" onclick="filterParticipants('team_b', this)">Time Mar</button>
+        <button type="button" class="filter-pill" onclick="filterParticipants('none', this)">Sem Time</button>
       </div>
 
       <!-- Lista de Jovens -->
@@ -724,14 +1124,15 @@
   <!-- ====================================================
        MODAL: EDITAR NOMES DAS EQUIPES (HOST)
        ==================================================== -->
-  <div id="modal-edit-teams" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
+    <div id="modal-edit-teams" class="modal-backdrop" onclick="if(event.target === this) closeModals()">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-header">
-        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">✏️ Editar Equipes</h2>
+        <h2 class="font-display" style="font-size: 20px; font-weight: 800;">✏️ Personalizar Equipes</h2>
         <button class="modal-close-btn" onclick="closeModals()">✕</button>
       </div>
 
+      <!-- Equipe 1 -->
       <div style="background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; padding: 12px; margin-bottom: 14px;">
         <span class="micro-label" style="color: #B45309;">Equipe 1</span>
         <div style="display: flex; gap: 8px; margin-top: 6px;">
@@ -744,18 +1145,45 @@
             <input id="edit-team-a-name" class="form-input" type="text" placeholder="Ex: Time Sol">
           </div>
         </div>
+        <div style="margin-top: 10px;">
+          <label class="form-label" style="font-size: 11px; margin-bottom: 4px; display: block;">Cor da Equipe 1</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input id="edit-team-a-color" type="color" value="#FECB66" style="width: 44px; height: 34px; border: 2px solid var(--color-ink-primary); border-radius: 8px; cursor: pointer; padding: 2px; background: #fff;">
+            <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+              <span class="color-preset-dot" style="background: #FECB66;" title="Amarelo Mel" onclick="document.getElementById('edit-team-a-color').value='#FECB66'"></span>
+              <span class="color-preset-dot" style="background: #8EC5FC;" title="Azul Céu" onclick="document.getElementById('edit-team-a-color').value='#8EC5FC'"></span>
+              <span class="color-preset-dot" style="background: #FF6F89;" title="Coral Berry" onclick="document.getElementById('edit-team-a-color').value='#FF6F89'"></span>
+              <span class="color-preset-dot" style="background: #79D3A8;" title="Menta Fresca" onclick="document.getElementById('edit-team-a-color').value='#79D3A8'"></span>
+              <span class="color-preset-dot" style="background: #D8B4E2;" title="Lilás Suave" onclick="document.getElementById('edit-team-a-color').value='#D8B4E2'"></span>
+            </div>
+          </div>
+        </div>
       </div>
 
+      <!-- Equipe 2 -->
       <div style="background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; padding: 12px; margin-bottom: 16px;">
-        <span class="micro-label" style="color: var(--color-accent-coral-dark);">Equipe 2</span>
+        <span class="micro-label" style="color: #0284C7;">Equipe 2</span>
         <div style="display: flex; gap: 8px; margin-top: 6px;">
           <div style="width: 60px;">
             <label class="form-label" style="font-size: 11px;">Ícone</label>
-            <input id="edit-team-b-crest" class="form-input" style="text-align: center; font-size: 18px;" type="text" value="🔥" maxlength="4">
+            <input id="edit-team-b-crest" class="form-input" style="text-align: center; font-size: 18px;" type="text" value="🌊" maxlength="4">
           </div>
           <div style="flex: 1;">
             <label class="form-label" style="font-size: 11px;">Nome da Equipe</label>
-            <input id="edit-team-b-name" class="form-input" type="text" placeholder="Ex: Time Nascente">
+            <input id="edit-team-b-name" class="form-input" type="text" placeholder="Ex: Time Mar">
+          </div>
+        </div>
+        <div style="margin-top: 10px;">
+          <label class="form-label" style="font-size: 11px; margin-bottom: 4px; display: block;">Cor da Equipe 2</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input id="edit-team-b-color" type="color" value="#8EC5FC" style="width: 44px; height: 34px; border: 2px solid var(--color-ink-primary); border-radius: 8px; cursor: pointer; padding: 2px; background: #fff;">
+            <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+              <span class="color-preset-dot" style="background: #8EC5FC;" title="Azul Céu" onclick="document.getElementById('edit-team-b-color').value='#8EC5FC'"></span>
+              <span class="color-preset-dot" style="background: #FECB66;" title="Amarelo Mel" onclick="document.getElementById('edit-team-b-color').value='#FECB66'"></span>
+              <span class="color-preset-dot" style="background: #FF6F89;" title="Coral Berry" onclick="document.getElementById('edit-team-b-color').value='#FF6F89'"></span>
+              <span class="color-preset-dot" style="background: #79D3A8;" title="Menta Fresca" onclick="document.getElementById('edit-team-b-color').value='#79D3A8'"></span>
+              <span class="color-preset-dot" style="background: #D8B4E2;" title="Lilás Suave" onclick="document.getElementById('edit-team-b-color').value='#D8B4E2'"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -818,12 +1246,19 @@
           telaoCtrl.sendAction('TELAO_SWITCH_VIEW', { view: 'placar' });
           telaoCtrl.hideTimerFromTelao();
           telaoCtrl.stopVideo();
+        } else if (subTabName === 'timer') {
+          telaoCtrl.sendAction('TELAO_SWITCH_VIEW', { view: 'timer' });
+        } else if (subTabName === 'dance') {
+          telaoCtrl.sendAction('TELAO_SWITCH_VIEW', { view: 'dance' });
+        } else if (subTabName === 'sons') {
+          telaoCtrl.sendAction('TELAO_SWITCH_VIEW', { view: 'sons' });
         }
-        // As abas dance e sons no host não disparam vídeos/sons sozinhas:
-        // aguardam o toque específico do usuário em cada botão!
       }
 
       // 3. Renderiza Vídeos ou Instants conforme a sub-aba
+      if (subTabName === 'placar' && typeof renderSelectProvaTelao === 'function') {
+        renderSelectProvaTelao();
+      }
       if (subTabName === 'dance' && typeof renderVideos === 'function') {
         renderVideos();
       }
@@ -850,6 +1285,12 @@
       }
       if (typeof loadMediaLists === 'function') {
         loadMediaLists();
+      }
+      if (typeof renderSelectProvaTelao === 'function') {
+        renderSelectProvaTelao();
+      }
+      if (typeof renderUI === 'function') {
+        renderUI();
       }
       switchMainTab('telao');
       switchTelaoSubTab('placar');

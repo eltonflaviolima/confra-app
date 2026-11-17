@@ -3,12 +3,14 @@
     "team_a": {
       "name": "Time Sol",
       "points": 5,
-      "crest": "☀️"
+      "crest": "☀️",
+      "color": "#FECB66"
     },
     "team_b": {
       "name": "Time Mar",
       "points": 5,
-      "crest": "🌊"
+      "crest": "🌊",
+      "color": "#8EC5FC"
     }
   },
   "provas": [
@@ -327,5 +329,6 @@
       "timestamp": "14:44"
     }
   ],
-  "adminPin": "1234"
+  "adminPin": "1234",
+  "customVideos": []
 }
