@@ -425,6 +425,25 @@
       box-shadow: 0 1px 0 0 var(--color-ink);
     }
 
+    /* QUANDO APRESENTANDO PROVA NO TELÃO: O PLACAR E OUTRAS SEÇÕES DÃO LUGAR TOTALMENTE À PROVA */
+    body.in-prova-presentation #arena-container,
+    body.in-prova-presentation .clash-section,
+    body.in-prova-presentation #telao-timer-stage {
+      display: none !important;
+      height: 0 !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    body.in-prova-presentation .telao-prova-stage {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
     /* PALCO CINEMATOGRÁFICO DE APRESENTAÇÃO DE PROVA NO TELÃO (SUBSTITUI TOTALMENTE O PLACAR SEM SCROLL) */
     .telao-prova-stage {
       flex: 1;
@@ -1366,6 +1385,7 @@
       stopDanceVideo();
       hideTelaoTimer();
 
+      document.body.classList.add('in-prova-presentation');
       const arena = document.getElementById('arena-container');
       const clash = document.querySelector('.clash-section');
       if (arena) arena.style.display = 'none';
@@ -1519,6 +1539,7 @@
       provaPresentationInterval = null;
       isPresentationPaused = false;
 
+      document.body.classList.remove('in-prova-presentation');
       const stage = document.getElementById('telao-prova-stage');
       const arena = document.getElementById('arena-container');
       const clash = document.querySelector('.clash-section');
@@ -1668,6 +1689,7 @@
 
     function showTelaoTimer(seconds, autoStart = false) {
       // Esconde o placar e a barra de disputa
+      document.body.classList.add('in-prova-presentation');
       const arena = document.getElementById('arena-container');
       const clash = document.querySelector('.clash-section');
       if (arena) arena.style.display = 'none';

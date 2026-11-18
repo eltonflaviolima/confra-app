@@ -69,7 +69,7 @@
 
           <!-- Botão 3: Telão (Abre diretamente sem telas intermediárias) -->
           <div class="btn-gateway-role" onclick="openTelaoDirect()">
-            <div class="gateway-role-icon" style="background: var(--color-accent-coral-light);">
+            <div class="gateway-role-icon" style="background: #E0F2FE;">
               <span>📺</span>
             </div>
             <div class="gateway-role-info">
@@ -192,6 +192,9 @@
       <div id="tab-btn-provas" class="segment-tab" onclick="switchMainTab('provas')">
         <span>📜 Provas</span>
       </div>
+      <div id="tab-btn-equipes" class="segment-tab" onclick="switchMainTab('equipes')">
+        <span>👥 Equipes</span>
+      </div>
       <div id="tab-btn-instants" class="segment-tab admin-only" style="display: none;" onclick="switchMainTab('instants')">
         <span>🎛️ Instants</span>
       </div>
@@ -288,6 +291,18 @@
 
       <div id="provas-list-container">
         <!-- Renderizado dinamicamente -->
+      </div>
+    </section>
+
+    <!-- ====================================================
+         VIEW: EQUIPES (VISAO DO PARTICIPANTE - ROSTERS)
+         ==================================================== -->
+    <section id="view-equipes" class="tab-view-content" style="display: none;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+        <h2 class="font-display" style="font-size: 20px; font-weight: 800; color: var(--color-ink-primary);">Equipes da Gincana</h2>
+      </div>
+      <div id="equipes-cards-container">
+        <!-- Renderizado dinamicamente por renderEquipes() -->
       </div>
     </section>
 
@@ -512,6 +527,18 @@
         </svg>
       </div>
       <span class="nav-label">Provas</span>
+    </div>
+
+    <div id="nav-btn-equipes" class="nav-item" onclick="switchMainTab('equipes')">
+      <div class="nav-icon-wrapper">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3A001D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+      </div>
+      <span class="nav-label">Equipes</span>
     </div>
 
     <div id="nav-btn-instants" class="nav-item admin-only" style="display: none;" onclick="switchMainTab('instants')">
@@ -867,6 +894,10 @@
       if (navEl) navEl.classList.add('active');
 
       state.activeTab = tabName;
+
+      if (tabName === 'equipes' && typeof renderEquipes === 'function') {
+        renderEquipes();
+      }
 
       // Renderiza os Instants se for a tela de instants
       if (tabName === 'instants') {

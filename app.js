@@ -1069,6 +1069,15 @@ function renderEquipes() {
   const container = document.getElementById('equipes-cards-container');
   if (!container) return;
 
+  const isHost = typeof state !== 'undefined' && state.isAdmin && (
+    window.location.pathname.includes('/host') || 
+    window.location.pathname.endsWith('host.html')
+  );
+
+  const currentParticipantId = localStorage.getItem('confra_current_participant_id');
+  const currentParticipant = currentParticipantId ? state.participants.find(p => p.id === currentParticipantId) : null;
+  const myTeamId = currentParticipant ? currentParticipant.team : null;
+
   const teamA = state.teams.team_a;
   const teamB = state.teams.team_b;
 
@@ -1086,10 +1095,15 @@ function renderEquipes() {
         <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
           <span style="font-size: 20px;">${teamA.crest}</span>
           <span class="micro-label" style="font-size: 13px; color: var(--color-ink-primary); font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${teamA.name}</span>
+          ${(!isHost && myTeamId === 'team_a') ? `
+            <span class="tag-badge" style="background: var(--color-ink-primary); color: #FFF; font-weight: 900; font-size: 11px; margin-left: 6px; flex-shrink: 0;">⭐ MINHA EQUIPE</span>
+          ` : ''}
         </div>
-        <div style="display: flex; gap: 8px; align-items: center;">
+        <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;">
           <span class="tag-badge" style="background: ${colA}; color: var(--color-ink-primary); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">${membersA.length} membros</span>
-          <button type="button" class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 13px; border-radius: 9999px; margin: 0;" onclick="event.stopPropagation(); openEditTeamsModal()" title="Editar Nomes & Brasões">✏️</button>
+          ${isHost ? `
+            <button type="button" class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 13px; border-radius: 9999px; margin: 0;" onclick="event.stopPropagation(); openEditTeamsModal()" title="Editar Nomes & Brasões">✏️</button>
+          ` : ''}
           <span style="font-size: 12px; font-weight: 900; color: var(--color-ink-primary);">${equipesCollapsed.team_a ? '▼' : '▲'}</span>
         </div>
       </div>
@@ -1097,19 +1111,27 @@ function renderEquipes() {
         <div class="card-body" style="padding: 12px 14px;">
           <div style="display: flex; flex-direction: column; gap: 8px;">
             ${membersA.length === 0 ? '<p style="font-size: 12px; color: var(--color-ink-muted); text-align: center; padding: 12px;">Nenhum participante escalado neste time.</p>' : 
-              membersA.map(p => `
+              membersA.map(p => {
+                const isMe = p.id === currentParticipantId;
+                return `
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; gap: 8px;">
-                  <span style="font-size: 14px; font-weight: 800; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0;">${p.name}</span>
-                  <div style="display: flex; gap: 6px; flex-shrink: 0;">
-                    <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px;" onclick="state.atribuirEquipe('${p.id}', 'team_b')" title="Mover para ${teamB.name}">
-                      Mover p/ ${teamB.crest}
-                    </button>
-                    <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px; color: var(--color-accent-coral);" onclick="state.atribuirEquipe('${p.id}', null)" title="Remover do time">
-                      ✕
-                    </button>
+                  <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
+                    <span style="font-size: 14px; font-weight: 800; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</span>
+                    ${isMe ? `<span style="font-size: 10px; font-weight: 900; color: #166534; background: var(--color-accent-mint-light); border: 1.5px solid var(--color-ink-primary); padding: 2px 7px; border-radius: 9999px; flex-shrink: 0;">VOCÊ</span>` : ''}
                   </div>
+                  ${isHost ? `
+                    <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                      <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px;" onclick="state.atribuirEquipe('${p.id}', 'team_b')" title="Mover para ${teamB.name}">
+                        Mover p/ ${teamB.crest}
+                      </button>
+                      <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px; color: var(--color-accent-coral);" onclick="state.atribuirEquipe('${p.id}', null)" title="Remover do time">
+                        ✕
+                      </button>
+                    </div>
+                  ` : ''}
                 </div>
-              `).join('')}
+              `;
+              }).join('')}
           </div>
         </div>
       `}
@@ -1121,10 +1143,15 @@ function renderEquipes() {
         <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
           <span style="font-size: 20px;">${teamB.crest}</span>
           <span class="micro-label" style="font-size: 13px; color: var(--color-ink-primary); font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${teamB.name}</span>
+          ${(!isHost && myTeamId === 'team_b') ? `
+            <span class="tag-badge" style="background: var(--color-ink-primary); color: #FFF; font-weight: 900; font-size: 11px; margin-left: 6px; flex-shrink: 0;">⭐ MINHA EQUIPE</span>
+          ` : ''}
         </div>
-        <div style="display: flex; gap: 8px; align-items: center;">
+        <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;">
           <span class="tag-badge" style="background: ${colB}; color: var(--color-ink-primary); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">${membersB.length} membros</span>
-          <button type="button" class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 13px; border-radius: 9999px; margin: 0;" onclick="event.stopPropagation(); openEditTeamsModal()" title="Editar Nomes & Brasões">✏️</button>
+          ${isHost ? `
+            <button type="button" class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 13px; border-radius: 9999px; margin: 0;" onclick="event.stopPropagation(); openEditTeamsModal()" title="Editar Nomes & Brasões">✏️</button>
+          ` : ''}
           <span style="font-size: 12px; font-weight: 900; color: var(--color-ink-primary);">${equipesCollapsed.team_b ? '▼' : '▲'}</span>
         </div>
       </div>
@@ -1132,19 +1159,27 @@ function renderEquipes() {
         <div class="card-body" style="padding: 12px 14px;">
           <div style="display: flex; flex-direction: column; gap: 8px;">
             ${membersB.length === 0 ? '<p style="font-size: 12px; color: var(--color-ink-muted); text-align: center; padding: 12px;">Nenhum participante escalado neste time.</p>' : 
-              membersB.map(p => `
+              membersB.map(p => {
+                const isMe = p.id === currentParticipantId;
+                return `
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; gap: 8px;">
-                  <span style="font-size: 14px; font-weight: 800; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0;">${p.name}</span>
-                  <div style="display: flex; gap: 6px; flex-shrink: 0;">
-                    <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px;" onclick="state.atribuirEquipe('${p.id}', 'team_a')" title="Mover para ${teamA.name}">
-                      Mover p/ ${teamA.crest}
-                    </button>
-                    <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px; color: var(--color-accent-coral);" onclick="state.atribuirEquipe('${p.id}', null)" title="Remover do time">
-                      ✕
-                    </button>
+                  <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
+                    <span style="font-size: 14px; font-weight: 800; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</span>
+                    ${isMe ? `<span style="font-size: 10px; font-weight: 900; color: #166534; background: var(--color-accent-mint-light); border: 1.5px solid var(--color-ink-primary); padding: 2px 7px; border-radius: 9999px; flex-shrink: 0;">VOCÊ</span>` : ''}
                   </div>
+                  ${isHost ? `
+                    <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                      <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px;" onclick="state.atribuirEquipe('${p.id}', 'team_a')" title="Mover para ${teamA.name}">
+                        Mover p/ ${teamA.crest}
+                      </button>
+                      <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px; color: var(--color-accent-coral);" onclick="state.atribuirEquipe('${p.id}', null)" title="Remover do time">
+                        ✕
+                      </button>
+                    </div>
+                  ` : ''}
                 </div>
-              `).join('')}
+              `;
+              }).join('')}
           </div>
         </div>
       `}
@@ -1166,19 +1201,27 @@ function renderEquipes() {
         ${equipesCollapsed.unassigned ? '' : `
           <div class="card-body" style="padding: 12px 14px;">
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              ${unassigned.map(p => `
+              ${unassigned.map(p => {
+                const isMe = p.id === currentParticipantId;
+                return `
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; gap: 8px;">
-                  <span style="font-size: 14px; font-weight: 800; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0;">${p.name}</span>
-                  <div style="display: flex; gap: 8px; flex-shrink: 0;">
-                    <button class="btn-tactile small" style="padding: 6px 12px; font-size: 15px; background: ${colA}; color: #3A001D; border: 2px solid var(--color-ink-primary); border-radius: 9999px; min-width: 38px; display: inline-flex; align-items: center; justify-content: center;" onclick="state.atribuirEquipe('${p.id}', 'team_a')" title="Mover para ${teamA.name}">
-                      ${teamA.crest}
-                    </button>
-                    <button class="btn-tactile small" style="padding: 6px 12px; font-size: 15px; background: ${colB}; color: #3A001D; border: 2px solid var(--color-ink-primary); border-radius: 9999px; min-width: 38px; display: inline-flex; align-items: center; justify-content: center;" onclick="state.atribuirEquipe('${p.id}', 'team_b')" title="Mover para ${teamB.name}">
-                      ${teamB.crest}
-                    </button>
+                  <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
+                    <span style="font-size: 14px; font-weight: 800; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</span>
+                    ${isMe ? `<span style="font-size: 10px; font-weight: 900; color: #166534; background: var(--color-accent-mint-light); border: 1.5px solid var(--color-ink-primary); padding: 2px 7px; border-radius: 9999px; flex-shrink: 0;">VOCÊ</span>` : ''}
                   </div>
+                  ${isHost ? `
+                    <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                      <button class="btn-tactile small" style="padding: 6px 12px; font-size: 15px; background: ${colA}; color: #3A001D; border: 2px solid var(--color-ink-primary); border-radius: 9999px; min-width: 38px; display: inline-flex; align-items: center; justify-content: center;" onclick="state.atribuirEquipe('${p.id}', 'team_a')" title="Mover para ${teamA.name}">
+                        ${teamA.crest}
+                      </button>
+                      <button class="btn-tactile small" style="padding: 6px 12px; font-size: 15px; background: ${colB}; color: #3A001D; border: 2px solid var(--color-ink-primary); border-radius: 9999px; min-width: 38px; display: inline-flex; align-items: center; justify-content: center;" onclick="state.atribuirEquipe('${p.id}', 'team_b')" title="Mover para ${teamB.name}">
+                        ${teamB.crest}
+                      </button>
+                    </div>
+                  ` : ''}
                 </div>
-              `).join('')}
+              `;
+              }).join('')}
             </div>
           </div>
         `}
@@ -1768,13 +1811,14 @@ function renderEntryParticipants(filter = '') {
     const isA = p.team === 'team_a';
     const isB = p.team === 'team_b';
     const teamObj = isA ? state.teams.team_a : (isB ? state.teams.team_b : null);
-    const teamColor = isA ? 'var(--color-accent-yellow)' : (isB ? 'var(--color-accent-coral)' : '#FFF');
-    const teamBg = isA ? 'var(--color-accent-yellow-light)' : (isB ? 'var(--color-accent-coral-light)' : 'var(--color-surface-tint)');
+    const teamColor = isA ? (state.teams.team_a.color || '#FECB66') : (isB ? (state.teams.team_b.color || '#8EC5FC') : '#FFFFFF');
+    const teamBg = isA ? 'var(--color-accent-yellow-light)' : (isB ? '#E0F2FE' : 'var(--color-surface-tint)');
+    const cardBg = isA ? 'linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 100%)' : (isB ? 'linear-gradient(180deg, #FFFFFF 0%, #F0F8FF 100%)' : '#FFFFFF');
     const teamLabel = teamObj ? `${teamObj.crest} ${teamObj.name}` : '⏳ Sem Time';
     const initials = p.name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
 
     return `
-      <div class="participant-entry-card" onclick="selectParticipant('${p.id}')" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; background: #FFFFFF; border: 2.5px solid var(--color-ink-primary); border-radius: 18px; box-shadow: 0 4px 0 0 var(--color-ink-primary); cursor: pointer; user-select: none;">
+      <div class="participant-entry-card" onclick="selectParticipant('${p.id}')" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; background: ${cardBg}; border: 2.5px solid var(--color-ink-primary); border-radius: 18px; box-shadow: 0 4px 0 0 var(--color-ink-primary); cursor: pointer; user-select: none;">
         <div class="participant-info" style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
           <div class="participant-avatar" style="background: ${teamColor}; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--color-ink-primary); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
             ${teamObj ? teamObj.crest : initials}
