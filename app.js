@@ -928,10 +928,10 @@ function renderScoreboard() {
     barB.style.width = pctB + '%';
     barB.style.background = colB;
   }
-  if (crestAEl && crestAEl.parentElement && crestAEl.parentElement.classList.contains('host-team-crest')) {
+  if (crestAEl && crestAEl.parentElement) {
     crestAEl.parentElement.style.background = colA;
   }
-  if (crestBEl && crestBEl.parentElement && crestBEl.parentElement.classList.contains('host-team-crest')) {
+  if (crestBEl && crestBEl.parentElement) {
     crestBEl.parentElement.style.background = colB;
   }
 
@@ -945,19 +945,23 @@ function renderProvas() {
   const container = document.getElementById('provas-list-container');
   if (!container) return;
 
+  const isHost = typeof state !== 'undefined' && state.isAdmin && (
+    window.location.pathname.includes('/host') || 
+    window.location.pathname.endsWith('host.html')
+  );
+
   container.innerHTML = state.provas.map(prova => {
     return `
       <div class="prova-card" onclick="openProvaModal('${prova.id}')">
-        <div class="prova-card-header" style="background: var(--color-surface-tint);">
+        <div class="prova-card-header" style="background: var(--color-surface-tint); display: flex; align-items: center; justify-content: space-between;">
           <span class="tag-badge" style="background: var(--color-surface-pure);">
             <span>${prova.icon}</span> ${prova.category}
           </span>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <button class="btn-tactile small secondary" style="padding: 3px 8px; font-size: 11px;" onclick="event.stopPropagation(); openEditProvaModal('${prova.id}')" title="Editar prova">
+          ${isHost ? `
+            <button class="btn-tactile small secondary" style="padding: 4px 10px; font-size: 11px; margin-left: auto;" onclick="event.stopPropagation(); openEditProvaModal('${prova.id}')" title="Editar prova">
               ✏️ Editar
             </button>
-            <span class="micro-label" style="color: var(--color-ink-muted);">⏱️ ${prova.duration}</span>
-          </div>
+          ` : ''}
         </div>
         <div class="prova-card-body">
           <h3 class="prova-title">${prova.title}</h3>
@@ -966,14 +970,6 @@ function renderProvas() {
             <span style="font-size: 12px; font-weight: 700; color: var(--color-ink-primary);">
               🏆 ${prova.scoreRule}
             </span>
-            <div style="display: flex; gap: 8px;">
-              <span class="tag-badge" style="background: ${state.teams.team_a.color || '#FECB66'}; color: var(--color-ink-primary); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">
-                ${state.teams.team_a.crest} ${prova.pointsA || 0}
-              </span>
-              <span class="tag-badge" style="background: ${state.teams.team_b.color || '#8EC5FC'}; color: var(--color-ink-primary); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">
-                ${state.teams.team_b.crest} ${prova.pointsB || 0}
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -1050,12 +1046,7 @@ function renderParticipantes() {
             ${p.team && teamObj ? teamObj.crest : initials}
           </div>
           <div class="participant-details">
-            <div class="participant-name">${p.name}</div>
-            <div class="participant-sub">
-              <span>📞 ${p.phone || 'Sem contato'}</span>
-              <span>•</span>
-              <span title="${p.diet}">🍽️ ${p.diet.split('+')[0] || 'Geral'}</span>
-            </div>
+            <div class="participant-name" style="font-weight: 800; font-size: 14px; color: var(--color-ink-primary);">${p.name}</div>
           </div>
         </div>
         <select class="participant-team-select" onchange="state.atribuirEquipe('${p.id}', this.value)" ${state.isAdmin ? '' : 'disabled title="Desbloqueie o Modo Líder para alterar times"'}>
@@ -1066,6 +1057,12 @@ function renderParticipantes() {
       </div>
     `;
   }).join('');
+}
+
+let equipesCollapsed = { team_a: false, team_b: false, unassigned: false };
+function toggleEquipeCollapse(teamId) {
+  equipesCollapsed[teamId] = !equipesCollapsed[teamId];
+  renderEquipes();
 }
 
 function renderEquipes() {
@@ -1079,104 +1076,112 @@ function renderEquipes() {
   const membersB = state.participants.filter(p => p.team === 'team_b');
   const unassigned = state.participants.filter(p => !p.team);
 
+  const colA = teamA.color || '#FECB66';
+  const colB = teamB.color || '#8EC5FC';
+
   container.innerHTML = `
     <!-- Card Time A -->
-    <article class="bento-card" style="margin-bottom: 16px;">
-      <div class="card-header-tint" style="background: var(--color-accent-yellow-light);">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 22px;">${teamA.crest}</span>
-          <span class="micro-label" style="font-size: 13px; color: var(--color-ink-primary);">${teamA.name}</span>
+    <article class="bento-card" style="margin-bottom: 14px;">
+      <div class="card-header-tint" onclick="toggleEquipeCollapse('team_a')" style="background: var(--color-accent-yellow-light); cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 10px 14px;">
+        <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+          <span style="font-size: 20px;">${teamA.crest}</span>
+          <span class="micro-label" style="font-size: 13px; color: var(--color-ink-primary); font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${teamA.name}</span>
         </div>
-        <div style="display: flex; gap: 6px; align-items: center;">
-          <span class="tag-badge tabular" style="background: var(--color-surface-pure); font-weight: 800;">${teamA.points} pts</span>
-          <span class="tag-badge" style="background: var(--color-accent-yellow); font-weight: 800;">${membersA.length} membros</span>
-        </div>
-      </div>
-      <div class="card-body">
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          ${membersA.length === 0 ? '<p style="font-size: 12px; color: var(--color-ink-muted); text-align: center; padding: 12px;">Nenhum participante escalado neste time.</p>' : 
-            membersA.map(p => `
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 14px; font-weight: 800;">${p.name}</span>
-                  <span style="font-size: 10px; color: var(--color-ink-muted);">(${p.diet ? p.diet.split('+')[0] : 'Geral'})</span>
-                </div>
-                <div style="display: flex; gap: 6px;">
-                  <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px;" onclick="state.atribuirEquipe('${p.id}', 'team_b')" title="Mover para ${teamB.name}">
-                    Mover p/ ${teamB.crest}
-                  </button>
-                  <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px; color: var(--color-accent-coral);" onclick="state.atribuirEquipe('${p.id}', null)" title="Remover do time">
-                    ✕
-                  </button>
-                </div>
-              </div>
-            `).join('')}
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <span class="tag-badge" style="background: ${colA}; color: var(--color-ink-primary); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">${membersA.length} membros</span>
+          <button type="button" class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 13px; border-radius: 9999px; margin: 0;" onclick="event.stopPropagation(); openEditTeamsModal()" title="Editar Nomes & Brasões">✏️</button>
+          <span style="font-size: 12px; font-weight: 900; color: var(--color-ink-primary);">${equipesCollapsed.team_a ? '▼' : '▲'}</span>
         </div>
       </div>
+      ${equipesCollapsed.team_a ? '' : `
+        <div class="card-body" style="padding: 12px 14px;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            ${membersA.length === 0 ? '<p style="font-size: 12px; color: var(--color-ink-muted); text-align: center; padding: 12px;">Nenhum participante escalado neste time.</p>' : 
+              membersA.map(p => `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; gap: 8px;">
+                  <span style="font-size: 14px; font-weight: 800; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0;">${p.name}</span>
+                  <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                    <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px;" onclick="state.atribuirEquipe('${p.id}', 'team_b')" title="Mover para ${teamB.name}">
+                      Mover p/ ${teamB.crest}
+                    </button>
+                    <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px; color: var(--color-accent-coral);" onclick="state.atribuirEquipe('${p.id}', null)" title="Remover do time">
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+          </div>
+        </div>
+      `}
     </article>
 
     <!-- Card Time B -->
-    <article class="bento-card" style="margin-bottom: 16px;">
-      <div class="card-header-tint" style="background: #E0F2FE;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 22px;">${teamB.crest}</span>
-          <span class="micro-label" style="font-size: 13px; color: var(--color-ink-primary);">${teamB.name}</span>
+    <article class="bento-card" style="margin-bottom: 14px;">
+      <div class="card-header-tint" onclick="toggleEquipeCollapse('team_b')" style="background: #E0F2FE; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 10px 14px;">
+        <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+          <span style="font-size: 20px;">${teamB.crest}</span>
+          <span class="micro-label" style="font-size: 13px; color: var(--color-ink-primary); font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${teamB.name}</span>
         </div>
-        <div style="display: flex; gap: 6px; align-items: center;">
-          <span class="tag-badge tabular" style="background: var(--color-surface-pure); font-weight: 800;">${teamB.points} pts</span>
-          <span class="tag-badge" style="background: ${teamB.color || '#8EC5FC'}; color: var(--color-ink-primary); font-weight: 800;">${membersB.length} membros</span>
-        </div>
-      </div>
-      <div class="card-body">
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          ${membersB.length === 0 ? '<p style="font-size: 12px; color: var(--color-ink-muted); text-align: center; padding: 12px;">Nenhum participante escalado neste time.</p>' : 
-            membersB.map(p => `
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 14px; font-weight: 800;">${p.name}</span>
-                  <span style="font-size: 10px; color: var(--color-ink-muted);">(${p.diet ? p.diet.split('+')[0] : 'Geral'})</span>
-                </div>
-                <div style="display: flex; gap: 6px;">
-                  <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px;" onclick="state.atribuirEquipe('${p.id}', 'team_a')" title="Mover para ${teamA.name}">
-                    Mover p/ ${teamA.crest}
-                  </button>
-                  <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px; color: var(--color-accent-coral);" onclick="state.atribuirEquipe('${p.id}', null)" title="Remover do time">
-                    ✕
-                  </button>
-                </div>
-              </div>
-            `).join('')}
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <span class="tag-badge" style="background: ${colB}; color: var(--color-ink-primary); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">${membersB.length} membros</span>
+          <button type="button" class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 13px; border-radius: 9999px; margin: 0;" onclick="event.stopPropagation(); openEditTeamsModal()" title="Editar Nomes & Brasões">✏️</button>
+          <span style="font-size: 12px; font-weight: 900; color: var(--color-ink-primary);">${equipesCollapsed.team_b ? '▼' : '▲'}</span>
         </div>
       </div>
+      ${equipesCollapsed.team_b ? '' : `
+        <div class="card-body" style="padding: 12px 14px;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            ${membersB.length === 0 ? '<p style="font-size: 12px; color: var(--color-ink-muted); text-align: center; padding: 12px;">Nenhum participante escalado neste time.</p>' : 
+              membersB.map(p => `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; gap: 8px;">
+                  <span style="font-size: 14px; font-weight: 800; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0;">${p.name}</span>
+                  <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                    <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px;" onclick="state.atribuirEquipe('${p.id}', 'team_a')" title="Mover para ${teamA.name}">
+                      Mover p/ ${teamA.crest}
+                    </button>
+                    <button class="btn-tactile small secondary" style="padding: 4px 8px; font-size: 11px; color: var(--color-accent-coral);" onclick="state.atribuirEquipe('${p.id}', null)" title="Remover do time">
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+          </div>
+        </div>
+      `}
     </article>
 
     <!-- Sem Equipe (se houver) -->
     ${unassigned.length > 0 ? `
-      <article class="bento-card" style="margin-bottom: 16px;">
-        <div class="card-header-tint" style="background: var(--color-surface-warm);">
+      <article class="bento-card" style="margin-bottom: 14px;">
+        <div class="card-header-tint" onclick="toggleEquipeCollapse('unassigned')" style="background: var(--color-surface-warm); cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 10px 14px;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <span style="font-size: 18px;">⚠️</span>
-            <span class="micro-label">Sem Equipe Definida</span>
+            <span class="micro-label" style="font-weight: 900;">Sem Equipe Definida</span>
           </div>
-          <span class="tag-badge" style="background: var(--color-surface-pure); font-weight: 800;">${unassigned.length} pendentes</span>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="tag-badge" style="background: var(--color-surface-pure); font-weight: 800; border: 1.5px solid var(--color-ink-primary);">${unassigned.length} pendentes</span>
+            <span style="font-size: 12px; font-weight: 900; color: var(--color-ink-primary);">${equipesCollapsed.unassigned ? '▼' : '▲'}</span>
+          </div>
         </div>
-        <div class="card-body">
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            ${unassigned.map(p => `
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px;">
-                <span style="font-size: 14px; font-weight: 800;">${p.name}</span>
-                <div style="display: flex; gap: 6px;">
-                  <button class="btn-tactile small primary" style="padding: 4px 8px; font-size: 11px;" onclick="state.atribuirEquipe('${p.id}', 'team_a')">
-                    + ${teamA.crest} ${teamA.name}
-                  </button>
-                  <button class="btn-tactile small coral" style="padding: 4px 8px; font-size: 11px;" onclick="state.atribuirEquipe('${p.id}', 'team_b')">
-                    + ${teamB.crest} ${teamB.name}
-                  </button>
+        ${equipesCollapsed.unassigned ? '' : `
+          <div class="card-body" style="padding: 12px 14px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              ${unassigned.map(p => `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--color-surface-tint); border: var(--border-thin); border-radius: 14px; gap: 8px;">
+                  <span style="font-size: 14px; font-weight: 800; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0;">${p.name}</span>
+                  <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                    <button class="btn-tactile small" style="padding: 6px 12px; font-size: 15px; background: ${colA}; color: #3A001D; border: 2px solid var(--color-ink-primary); border-radius: 9999px; min-width: 38px; display: inline-flex; align-items: center; justify-content: center;" onclick="state.atribuirEquipe('${p.id}', 'team_a')" title="Mover para ${teamA.name}">
+                      ${teamA.crest}
+                    </button>
+                    <button class="btn-tactile small" style="padding: 6px 12px; font-size: 15px; background: ${colB}; color: #3A001D; border: 2px solid var(--color-ink-primary); border-radius: 9999px; min-width: 38px; display: inline-flex; align-items: center; justify-content: center;" onclick="state.atribuirEquipe('${p.id}', 'team_b')" title="Mover para ${teamB.name}">
+                      ${teamB.crest}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            `).join('')}
+              `).join('')}
+            </div>
           </div>
-        </div>
+        `}
       </article>
     ` : ''}
   `;
@@ -1197,19 +1202,19 @@ function renderLogs() {
 
   container.innerHTML = state.logs.slice(0, 6).map(log => {
     const isA = log.teamId === 'team_a';
-    const bg = isA ? 'var(--color-accent-yellow-light)' : 'var(--color-accent-coral-light)';
+    const teamObj = isA ? state.teams.team_a : state.teams.team_b;
+    const bg = teamObj.color || (isA ? '#FECB66' : '#8EC5FC');
+    const ptsFormatted = log.points > 0 ? `+${log.points}` : `${log.points}`;
+
     return `
-      <div class="log-item">
-        <div class="log-left">
-          <span class="log-pts-badge" style="background: ${bg};">+${log.points}</span>
-          <div>
-            <div style="font-weight: 700;">${log.teamName}</div>
-            <div style="font-size: 11px; color: var(--color-ink-muted);">${log.provaTitle} • ${log.timestamp}</div>
+      <div class="log-item" style="display: flex; align-items: center; justify-content: space-between; padding: 8px 10px;">
+        <div class="log-left" style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+          <span class="log-pts-badge" style="background: ${bg}; color: var(--color-ink-primary); border: 1.5px solid var(--color-ink-primary); font-weight: 900; font-size: 12px; padding: 4px 8px; border-radius: 9999px; min-width: 36px; text-align: center;">${ptsFormatted}</span>
+          <div style="min-width: 0; flex: 1;">
+            <div style="font-weight: 800; font-size: 13px; color: var(--color-ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${log.teamName}</div>
+            <div style="font-size: 11px; color: var(--color-ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${log.provaTitle || 'Gincana'} • ${log.timestamp}</div>
           </div>
         </div>
-        <span style="font-size: 11px; font-style: italic; color: var(--color-ink-muted); max-width: 120px; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-          ${log.reason || ''}
-        </span>
       </div>
     `;
   }).join('');

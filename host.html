@@ -478,9 +478,8 @@
           <div class="card-header-tint" style="background: var(--color-surface-tint); padding: 8px 14px;">
             <div style="display: flex; align-items: center; gap: 8px;">
               <span style="font-size: 16px;">🎯</span>
-              <span class="micro-label" style="color: var(--color-ink-primary);">Apresentação de Prova no Telão</span>
+              <span class="micro-label" style="color: var(--color-ink-primary);">Projetar Prova no Telão</span>
             </div>
-            <span class="tag-badge" style="background: var(--color-accent-yellow-light); font-size: 10px; font-weight: 800;">Ao Vivo</span>
           </div>
           <div class="card-body" style="padding: 14px;">
             <label class="form-label" for="select-prova-telao" style="font-size: 12px; font-weight: 800; color: var(--color-ink-primary); margin-bottom: 8px; display: block;">
@@ -506,11 +505,8 @@
           <div class="scoreboard-header">
             <div class="scoreboard-header-title">
               <span>🏆</span>
-              <span>Placar Oficial da Gincana</span>
+              <span>Placar Oficial</span>
             </div>
-            <button type="button" class="btn-edit-teams" onclick="openEditTeamsModal()">
-              ✏️ Editar Equipes
-            </button>
           </div>
 
           <div class="host-scoreboard-arena">
@@ -582,8 +578,7 @@
         <!-- Feed Recente de Pontos na Visão do Placar -->
         <article class="bento-card">
           <div class="card-header-tint">
-            <span class="micro-label">Histórico de Lançamentos Recentes</span>
-            <span class="tag-badge" style="background: var(--color-surface-warm);">Ao Vivo</span>
+            <span class="micro-label">Histórico de Pontos</span>
           </div>
           <div class="card-body">
             <div id="logs-container" class="logs-container">
@@ -597,10 +592,7 @@
       <div id="telao-subview-timer" class="telao-subview" style="display: none;">
         <article class="bento-card">
           <div class="card-header-tint" style="background: var(--color-surface-tint);">
-            <span class="micro-label">Cronômetro no Telão</span>
-            <span id="telao-timer-admin-status" class="tag-badge" style="background: var(--color-accent-mint-light); color: #2E7D32; font-size: 11px;">
-              📺 Telão Exibindo: Cronômetro
-            </span>
+            <span class="micro-label">Cronômetro Oficial</span>
           </div>
           <div class="card-body" style="text-align: center;">
             <p style="font-size: 12px; color: var(--color-ink-muted); margin-bottom: 14px;">
@@ -782,12 +774,12 @@
       </article>
 
       <!-- Campo de Busca de Inscrito -->
-      <div class="search-box" style="margin-bottom: 12px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <div class="search-input-wrapper" style="margin-bottom: 14px;">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A001D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <input id="search-participant" type="text" placeholder="Buscar inscrito por nome..." oninput="renderParticipantes()">
+        <input id="search-participant" class="search-input" type="text" placeholder="Buscar inscrito por nome..." oninput="renderParticipantes()">
       </div>
 
       <!-- Filtros Rápidos -->
@@ -808,26 +800,7 @@
          VIEW 4: EQUIPES (VER E EDITAR EQUIPES E SEUS INTEGRANTES)
          ==================================================== -->
     <section id="view-equipes" class="tab-view-content" style="display: none;">
-      <!-- Ações de Liderança das Equipes -->
-      <article class="bento-card" style="margin-bottom: 16px;">
-        <div class="card-header-tint" style="background: var(--color-surface-tint);">
-          <span class="micro-label">Gestão Oficial de Equipes</span>
-          <span class="tag-badge" style="background: var(--color-surface-pure);">Modo Host</span>
-        </div>
-        <div class="card-body">
-          <p style="font-size: 12px; color: var(--color-ink-muted); margin-bottom: 12px;">
-            Altere nomes, brasões ou redistribua participantes individualmente entre os times:
-          </p>
-          <div style="display: flex; gap: 10px;">
-            <button class="btn-tactile primary small" style="flex: 1;" onclick="openEditTeamsModal()">
-              <span>✏️ Editar Nomes & Brasões</span>
-            </button>
-            <button class="btn-tactile secondary small" style="flex: 1;" onclick="state.sortearEquipes()">
-              <span>🎲 Sortear 50/50</span>
-            </button>
-          </div>
-        </div>
-      </article>
+
 
       <!-- Painéis das Equipes com Integrantes -->
       <div id="equipes-cards-container">
