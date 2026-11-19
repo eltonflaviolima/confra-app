@@ -444,6 +444,28 @@
       padding-top: 0 !important;
     }
 
+    /* QUANDO APRESENTANDO CRONÔMETRO NO TELÃO: O PLACAR E A PROVA DÃO LUGAR AO CRONÔMETRO */
+    body.in-timer-stage #arena-container,
+    body.in-timer-stage .clash-section,
+    body.in-timer-stage #telao-prova-stage {
+      display: none !important;
+      height: 0 !important;
+      min-height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    body.in-timer-stage #telao-timer-stage {
+      display: flex !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      height: auto !important;
+      overflow: visible !important;
+    }
+
     /* PALCO CINEMATOGRÁFICO DE APRESENTAÇÃO DE PROVA NO TELÃO (SUBSTITUI TOTALMENTE O PLACAR SEM SCROLL) */
     .telao-prova-stage {
       flex: 1;
@@ -1484,9 +1506,7 @@
               titleWrap.style.transform = 'translateY(-20px)';
 
               provaPresentationTimeout2 = setTimeout(() => {
-                stage.style.display = 'none';
-                if (arena) arena.style.display = 'flex';
-                if (clash) clash.style.display = 'block';
+                cancelProvaPresentation();
               }, 700);
             }
           }, 1000);
@@ -1544,8 +1564,10 @@
       const arena = document.getElementById('arena-container');
       const clash = document.querySelector('.clash-section');
       if (stage) stage.style.display = 'none';
-      if (arena) arena.style.display = 'flex';
-      if (clash) clash.style.display = 'block';
+      if (!document.body.classList.contains('in-timer-stage')) {
+        if (arena) arena.style.display = 'flex';
+        if (clash) clash.style.display = 'block';
+      }
     }
 
     // Ação: Celebrar (toca celebration.mp3 e exibe banner)
@@ -1565,6 +1587,7 @@
 
     function startDanceVideo(videoSrc, title, videoType) {
       hideTelaoTimer(); // Garante que o timer feche e o placar/arena apareça
+      cancelProvaPresentation(); // Garante que a apresentação de prova feche
       const arena = document.getElementById('arena-container');
       const video = document.getElementById('dance-video');
       const ytIframe = document.getElementById('dance-youtube-iframe');
@@ -1688,8 +1711,14 @@
     let telaoTimerCountdownPlayed = false;
 
     function showTelaoTimer(seconds, autoStart = false) {
-      // Esconde o placar e a barra de disputa
-      document.body.classList.add('in-prova-presentation');
+      // Garante que a apresentação de prova e vídeos de dança sejam cancelados
+      cancelProvaPresentation();
+      stopDanceVideo();
+
+      // Ativa estado do cronômetro no body (e remove apresentação de prova se houvesse)
+      document.body.classList.remove('in-prova-presentation');
+      document.body.classList.add('in-timer-stage');
+
       const arena = document.getElementById('arena-container');
       const clash = document.querySelector('.clash-section');
       if (arena) arena.style.display = 'none';
@@ -1712,13 +1741,17 @@
 
     function hideTelaoTimer() {
       pauseTelaoTimer();
+      document.body.classList.remove('in-timer-stage');
+
       const timerStage = document.getElementById('telao-timer-stage');
       const arena = document.getElementById('arena-container');
       const clash = document.querySelector('.clash-section');
 
       if (timerStage) timerStage.style.display = 'none';
-      if (arena) arena.style.display = 'flex';
-      if (clash) clash.style.display = 'block';
+      if (!document.body.classList.contains('in-prova-presentation')) {
+        if (arena) arena.style.display = 'flex';
+        if (clash) clash.style.display = 'block';
+      }
 
       // Avisa via broadcast para desmarcar toggle se aberto em outra aba
       channel.postMessage({ type: 'TELAO_TIMER_STATE_REPORT', isVisible: false });
