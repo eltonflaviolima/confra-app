@@ -321,6 +321,7 @@ class AppState {
     this.isAdmin = isHostPage ? true : false;
     this.adminPin = '1234';
     this.activeTab = isHostPage ? 'telao' : 'placar';
+    window.state = this;
     this.load();
   }
 
@@ -604,6 +605,7 @@ class AppState {
 }
 
 const state = new AppState();
+window.state = state;
 
 // ==========================================
 // 4. CRONÔMETRO DE PROVAS (COM COUNTDOWN DE ÁUDIO)
@@ -1612,7 +1614,8 @@ function renderSelectProvaTelao() {
   const sel = document.getElementById('select-prova-telao');
   if (!sel) return;
   const currentVal = sel.value;
-  const list = (window.state && window.state.provas && window.state.provas.length > 0) ? window.state.provas : INITIAL_PROVAS;
+  const stateObj = (typeof state !== 'undefined' && state) ? state : (window.state || null);
+  const list = (stateObj && stateObj.provas && stateObj.provas.length > 0) ? stateObj.provas : INITIAL_PROVAS;
   sel.innerHTML = '<option value="" disabled ' + (!currentVal ? 'selected' : '') + '>-- Escolha uma prova para projetar --</option>' +
     list.map(p => `
       <option value="${p.id}" ${currentVal === p.id ? 'selected' : ''}>
@@ -1623,7 +1626,8 @@ function renderSelectProvaTelao() {
 
 function selecionarProvaTelao(provaId) {
   if (!provaId) return;
-  const prova = state.provas.find(p => p.id === provaId);
+  const stateObj = (typeof state !== 'undefined' && state) ? state : (window.state || null);
+  const prova = stateObj ? stateObj.provas.find(p => p.id === provaId) : null;
   if (!prova) return;
 
   telaoCtrl.sendAction('PRESENT_PROVA', { prova });

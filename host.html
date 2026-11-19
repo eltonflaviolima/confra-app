@@ -489,9 +489,6 @@
               <div style="flex: 1; min-width: 0;">
                 <select id="select-prova-telao" class="form-select" onchange="selecionarProvaTelao(this.value)" style="width: 100%; min-width: 0; font-weight: 700; font-size: 14px; padding: 12px 16px; background: #FFFFFF; border: 2.5px solid var(--color-ink-primary); border-radius: 9999px; box-shadow: var(--shadow-tactile-sm); color: var(--color-ink-primary); cursor: pointer; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
                   <option value="" disabled selected>-- Escolha uma prova para projetar --</option>
-                  <option value="adesivos">🏷️ Guerra dos Adesivos (O Dia Todo)</option>
-                  <option value="dois-corpos">📦 Dois Corpos Ocupam o Mesmo Lugar</option>
-                  <option value="splash">🌊 Splash! Salto na Piscina</option>
                 </select>
               </div>
               <button type="button" class="btn-tactile primary small" style="flex: 0 0 auto; width: auto !important; max-width: max-content !important; white-space: nowrap; padding: 12px 20px; font-size: 13px; font-weight: 800; border-radius: 9999px;" onclick="const val = document.getElementById('select-prova-telao').value; if(val) selecionarProvaTelao(val); else alert('Selecione uma prova primeiro!');" title="Projetar no Telão">
