@@ -519,6 +519,62 @@ class AppState {
     }
   }
 
+  importarParticipantes(lista) {
+    if (!Array.isArray(lista) || lista.length === 0) return 0;
+    let addedCount = 0;
+    const now = Date.now();
+
+    lista.forEach((item, idx) => {
+      const name = (typeof item === 'string' ? item : (item.name || '')).trim();
+      if (!name) return;
+
+      const exists = this.participants.some(p => p.name.trim().toLowerCase() === name.toLowerCase());
+      if (!exists) {
+        this.participants.push({
+          id: 'p_' + (now + idx) + '_' + Math.random().toString(36).substr(2, 4),
+          name: name,
+          phone: item.phone ? String(item.phone).trim() : '',
+          team: item.team || null,
+          diet: item.diet ? String(item.diet).trim() : 'Geral'
+        });
+        addedCount++;
+      }
+    });
+
+    if (addedCount > 0) {
+      this.save();
+      renderUI();
+    }
+    return addedCount;
+  }
+
+  apagarTodosParticipantes() {
+    this.participants = [];
+    localStorage.removeItem('confra_current_participant_id');
+    this.save();
+    renderUI();
+  }
+
+  zerarTodosPontos() {
+    this.provas.forEach(p => {
+      p.pointsA = 0;
+      p.pointsB = 0;
+    });
+    this.teams.team_a.points = 0;
+    this.teams.team_b.points = 0;
+    this.logs.unshift({
+      id: String(Date.now()),
+      teamId: 'team_a',
+      teamName: 'Liderança',
+      provaTitle: 'Zerar Placar Geral',
+      points: 0,
+      reason: 'Liderança resetou todas as pontuações da gincana para 0',
+      timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+    });
+    this.save();
+    renderUI();
+  }
+
   editarProva(id, title, category, duration, icon, scoreRule, description, tipsText = '', videoUrl = '') {
     const prova = this.provas.find(p => p.id === id);
     if (!prova) return;
@@ -1719,6 +1775,195 @@ function submitNewParticipant() {
   document.getElementById('new-participant-name').value = '';
   document.getElementById('new-participant-phone').value = '';
   document.getElementById('new-participant-diet').value = '';
+}
+
+// ==========================================
+// FUNÇÕES DE IMPORTAÇÃO (XLSX / CSV) & AÇÕES DE LIDERANÇA
+// ==========================================
+
+function toggleImportTooltip(e) {
+  if (e) e.stopPropagation();
+  const container = document.querySelector('.tooltip-container');
+  if (container) container.classList.toggle('open');
+}
+
+function closeImportTooltip() {
+  const container = document.querySelector('.tooltip-container');
+  if (container) container.classList.remove('open');
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.tooltip-container')) {
+    closeImportTooltip();
+  }
+});
+
+function extractParticipantsFromRows(rows) {
+  if (!rows || rows.length === 0) return { error: 'O arquivo não possui linhas de dados.' };
+
+  const firstRow = rows[0];
+  const keys = Object.keys(firstRow);
+
+  const norm = str => String(str || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  // 1. Procura pela coluna obrigatória 'inscritos' (ou 'inscrito')
+  let nameKey = keys.find(k => {
+    const nk = norm(k);
+    return nk === 'inscritos' || nk === 'inscrito';
+  });
+
+  // 2. Fallback tolerante para 'nome' ou 'participante'
+  if (!nameKey) {
+    nameKey = keys.find(k => {
+      const nk = norm(k);
+      return nk === 'nome' || nk === 'participante' || nk === 'jovem' || nk.includes('inscrit');
+    });
+  }
+
+  if (!nameKey) {
+    return {
+      error: 'Não foi encontrada a coluna obrigatória "inscritos" no arquivo selecionado.\n\nPor favor, certifique-se de que a sua planilha contenha pelo menos uma coluna chamada "inscritos" para cadastrar os nomes.'
+    };
+  }
+
+  // 3. Colunas opcionais: telefone e dieta
+  const phoneKey = keys.find(k => {
+    const nk = norm(k);
+    return nk.includes('telef') || nk.includes('cel') || nk.includes('contat') || nk === 'phone' || nk === 'whatsapp';
+  });
+
+  const dietKey = keys.find(k => {
+    const nk = norm(k);
+    return nk.includes('diet') || nk.includes('refei') || nk.includes('comid') || nk.includes('aliment');
+  });
+
+  const list = [];
+  rows.forEach(r => {
+    const nameVal = r[nameKey];
+    if (nameVal !== undefined && nameVal !== null) {
+      const cleanName = String(nameVal).trim();
+      if (cleanName.length > 0) {
+        list.push({
+          name: cleanName,
+          phone: phoneKey && r[phoneKey] ? String(r[phoneKey]).trim() : '',
+          diet: dietKey && r[dietKey] ? String(r[dietKey]).trim() : 'Geral'
+        });
+      }
+    }
+  });
+
+  return { participants: list };
+}
+
+function handleFileImport(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const fileName = file.name.toLowerCase();
+  const isXLSX = fileName.endsWith('.xlsx') || fileName.endsWith('.xls');
+  const isCSV = fileName.endsWith('.csv');
+
+  if (!isXLSX && !isCSV) {
+    alert('Formato de arquivo não suportado. Por favor, envie um arquivo .xlsx ou .csv.');
+    event.target.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    try {
+      let rows = [];
+
+      if (typeof XLSX !== 'undefined') {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheet = workbook.SheetNames[0];
+        if (!firstSheet) {
+          alert('A planilha selecionada não possui abas com dados.');
+          event.target.value = '';
+          return;
+        }
+        rows = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], { defval: '' });
+      } else {
+        // Fallback básico caso a biblioteca XLSX não esteja carregada
+        const text = new TextDecoder('utf-8').decode(e.target.result);
+        const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+        if (lines.length > 0) {
+          const sep = lines[0].includes(';') ? ';' : ',';
+          const headers = lines[0].split(sep).map(h => h.trim().replace(/^["']|["']$/g, ''));
+          rows = lines.slice(1).map(line => {
+            const cols = line.split(sep).map(c => c.trim().replace(/^["']|["']$/g, ''));
+            const obj = {};
+            headers.forEach((h, i) => { obj[h] = cols[i] || ''; });
+            return obj;
+          });
+        }
+      }
+
+      if (!rows || rows.length === 0) {
+        alert('O arquivo selecionado está vazio ou não contém registros válidos.');
+        event.target.value = '';
+        return;
+      }
+
+      const res = extractParticipantsFromRows(rows);
+      if (res.error) {
+        alert(res.error);
+        event.target.value = '';
+        return;
+      }
+
+      const candidates = res.participants;
+      if (candidates.length === 0) {
+        alert('Nenhum nome válido foi encontrado na coluna "inscritos".');
+        event.target.value = '';
+        return;
+      }
+
+      const confirmMsg = `📋 Encontrados ${candidates.length} participante(s) na coluna "inscritos" do arquivo "${file.name}".\n\nDeseja cadastrá-los no aplicativo agora?`;
+      if (confirm(confirmMsg)) {
+        const added = state.importarParticipantes(candidates);
+        if (typeof sounds !== 'undefined' && sounds.play) sounds.play('victory.wav', false);
+        alert(`🎉 Importação Concluída!\n\n${added} novo(s) participante(s) adicionado(s) com sucesso.${added < candidates.length ? `\n(${candidates.length - added} participante(s) já estavam na lista e foram mantidos sem duplicar)` : ''}`);
+      }
+    } catch (err) {
+      console.error('Erro ao processar arquivo:', err);
+      alert('Ocorreu um erro ao processar o arquivo: ' + (err.message || 'Erro desconhecido.'));
+    } finally {
+      event.target.value = '';
+    }
+  };
+
+  reader.onerror = function() {
+    alert('Erro ao carregar o arquivo do disco.');
+    event.target.value = '';
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+function confirmarApagarTodosInscritos() {
+  const total = (state.participants || []).length;
+  if (total === 0) {
+    alert('Não há participantes cadastrados no momento.');
+    return;
+  }
+  const ok = confirm(`⚠️ ATENÇÃO: EXCLUIR TODOS OS INSCRITOS\n\nTem certeza absoluta de que deseja apagar TODOS os ${total} participantes cadastrados?\n\nEsta ação removerá todos os membros das equipes e seus vínculos. Esta operação não pode ser desfeita.`);
+  if (ok) {
+    state.apagarTodosParticipantes();
+    if (typeof sounds !== 'undefined' && sounds.play) sounds.play('buzzer.wav', false);
+    alert('🗑️ Todos os participantes foram apagados.');
+  }
+}
+
+function confirmarZerarTodosPontos() {
+  const ok = confirm('⚠️ ZERAR PONTUAÇÃO DA GINCANA\n\nTem certeza de que deseja ZERAR TODOS OS PONTOS?\n\nO placar de ambas as equipes (Time Sol e Time Mar) e a pontuação de todas as provas voltarão para 0.');
+  if (ok) {
+    state.zerarTodosPontos();
+    if (typeof sounds !== 'undefined' && sounds.play) sounds.play('whistle.wav', false);
+    alert('🔄 Placar e pontos zerados para 0 com sucesso!');
+  }
 }
 
 function openEditTeamsModal() {

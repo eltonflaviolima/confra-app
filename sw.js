@@ -1,5 +1,5 @@
 // Service Worker para Confra JBSN — Cache Resiliente Offline
-const CACHE_NAME = 'confra-jbsn-v10';
+const CACHE_NAME = 'confra-jbsn-v11';
 const ASSETS = [
   './',
   './index.html',
@@ -7,6 +7,7 @@ const ASSETS = [
   './tela.html',
   './styles.css',
   './app.js',
+  './xlsx.full.min.js',
   './manifest.json'
 ];
 

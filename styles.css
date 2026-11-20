@@ -1828,3 +1828,86 @@ body {
       color: var(--color-ink-primary) !important;
       box-shadow: 0 1px 0 0 var(--color-ink-primary) !important;
     }
+
+
+/* =========================================================
+   TOOLTIP INFORMATIVO DE IMPORTAÇÃO & AÇÕES ADMINISTRATIVAS
+   ========================================================= */
+.tooltip-container {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.btn-tooltip-info {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  border: 2px solid var(--color-ink-primary) !important;
+  background: #FFFFFF !important;
+  color: var(--color-ink-primary) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 0 0 var(--color-ink-primary) !important;
+  transition: transform 0.1s var(--ease-tactile), background 0.1s ease !important;
+  user-select: none !important;
+  padding: 0 !important;
+  outline: none !important;
+  flex-shrink: 0 !important;
+}
+
+.btn-tooltip-info:active {
+  transform: translateY(2px) !important;
+  box-shadow: none !important;
+}
+
+.btn-tooltip-info:hover {
+  background: var(--color-surface-tint) !important;
+}
+
+.tooltip-bubble {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: -8px;
+  width: 280px;
+  background: #FFFFFF !important;
+  border: 2.5px solid var(--color-ink-primary) !important;
+  border-radius: 18px !important;
+  padding: 12px 14px !important;
+  box-shadow: 0 6px 0 0 var(--color-ink-primary), 0 10px 24px rgba(58, 0, 29, 0.18) !important;
+  z-index: 1000 !important;
+  color: var(--color-ink-primary) !important;
+  pointer-events: auto !important;
+  box-sizing: border-box !important;
+}
+
+.tooltip-bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 16px;
+  border-width: 8px 8px 0 8px;
+  border-style: solid;
+  border-color: var(--color-ink-primary) transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip-bubble,
+.tooltip-container.open .tooltip-bubble {
+  display: block !important;
+  animation: tooltipBubbleFade 0.18s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@keyframes tooltipBubbleFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
